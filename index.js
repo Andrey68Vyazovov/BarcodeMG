@@ -18,9 +18,9 @@ sendEmail();
 }); 
 
 function sendEmail() {
-  var email = 'vyazovov_av@magnit.ru';
-  var subject = 'transit-barcode';
-  var emailBody = arrayBarcode;
+  const email = 'rao_rctm@tambovrc.magnit.ru';
+  const subject = 'transit-barcode';
+  const emailBody = arrayBarcode;
   document.location = "mailto:"+email+"?subject="+subject+"&body="+emailBody;
 }
 
