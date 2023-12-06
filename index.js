@@ -1,16 +1,23 @@
 const inputButton = document.querySelector(".popup__close"); 
 const inputForm = document.querySelector(".input_1"); 
 const inputCounter = document.querySelector(".counter"); 
-const arrayBarcode = [];
-const emailBodyText='';
-const subjectText='';
+let arrayBarcode = [];
+let emailBodyText='';
+let subjectText='';
 let counter_1=0;
+var date = new Date();
 
 
 inputForm.addEventListener('input', ()=>{
   setTimeout(() => { 
     if (inputForm.value.length >=7 ) {
-      arrayBarcode.push(inputForm.value);
+      arrayBarcode.push(inputForm.value + ' ' 
+      + date.getDate() + '.' 
+      + (date.getMonth()+1) 
+      + '.' + date.getFullYear() 
+      + ' ' + date.getHours() 
+      + ':' + date.getMinutes() 
+      + ':' + date.getSeconds());
       inputForm.value='';
       counter_1++;
       inputCounter.textContent='Отсканировано ШК: '+counter_1;
@@ -18,11 +25,10 @@ inputForm.addEventListener('input', ()=>{
    }, 750);
 }); 
 
-inputButton.addEventListener('click', ()=>{
-emailBodyText= arrayBarcode;
-subjectText='transit-barcode:';
-console.log(subjectText);
-console.log(arrayBarcode);
+inputButton.addEventListener('click', () => {
+emailBodyText= arrayBarcode.join('*');
+subjectText='transit-barcode: ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+console.log(emailBodyText);
 counter_1=0;
 inputCounter.textContent='Отсканировано ШК: '+counter_1;
 sendEmail();
