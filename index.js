@@ -11,13 +11,14 @@ var date = new Date();
 inputForm.addEventListener('input', ()=>{
   setTimeout(() => { 
     if (inputForm.value.length >=7 ) {
-      arrayBarcode.push(inputForm.value + ' ' 
-      + date.getDate() + '.' 
-      + (date.getMonth()+1) 
-      + '.' + date.getFullYear() 
-      + ' ' + date.getHours() 
-      + ':' + date.getMinutes() 
-      + ':' + date.getSeconds());
+      arrayBarcode.push(inputForm.value);
+    //arrayBarcode.push(String(inputForm.value + ' ' 
+    //+ date.getDate() + '.' 
+    //+ (date.getMonth()+1) 
+    //+ '.' + date.getFullYear() 
+    //+ ' ' + date.getHours() 
+    //+ ':' + date.getMinutes() 
+    //+ ':' + date.getSeconds()));
       inputForm.value='';
       counter_1++;
       inputCounter.textContent='Отсканировано ШК: '+counter_1;
@@ -26,7 +27,7 @@ inputForm.addEventListener('input', ()=>{
 }); 
 
 inputButton.addEventListener('click', () => {
-emailBodyText= arrayBarcode.join('*');
+emailBodyText= arrayBarcode.join('%0D%0A');
 subjectText='transit-barcode: ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
 console.log(emailBodyText);
 counter_1=0;
