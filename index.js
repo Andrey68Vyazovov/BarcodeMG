@@ -18,16 +18,16 @@ inputForm.addEventListener('input', ()=>{
 
 inputButton.addEventListener('click', ()=>{
 console.log(arrayBarcode);
-sendEmail();
-arrayBarcode.length=0;
 counter_1=0;
 inputCounter.textContent='Отсканировано ШК: '+counter_1;
+sendEmail();
+arrayBarcode.length=0;
 }); 
 
 function sendEmail() {
   const email = 'vyazovov_av@magnit.ru'; //rao_rctm@tambovrc.magnit.ru
-  const subject = 'transit-barcode';
-  const emailBody = arrayBarcode.join('<br/>');
+  const subject = 'transit-barcode:'+ now;
+  const emailBody = arrayBarcode.join('\r\n');
   document.location = "mailto:"+email+"?subject="+subject+"&body="+emailBody;
 }
 
