@@ -31,8 +31,9 @@
 
 .main-form {
     width: 99vw;
-    height: 99vh;
+    height: 95vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 0 auto;
