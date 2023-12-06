@@ -52,3 +52,9 @@
     padding: 100px auto;
     gap: 20px;
 }
+
+.popup__close {
+    width: 150px;
+    height: 40px;
+    background-color: rgb(103, 128, 192);
+}

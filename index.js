@@ -1,6 +1,7 @@
 const inputButton = document.querySelector(".popup__close"); 
 const inputForm = document.querySelector(".input_1"); 
 const inputCounter = document.querySelector(".counter"); 
+const selects = document.querySelector("select");
 let arrayBarcode = [];
 let emailBodyText='';
 let subjectText='';
@@ -37,7 +38,7 @@ arrayBarcode.length=0;
 }); 
 
 function sendEmail() {
-  const email = 'vyazovov_av@magnit.ru'; //rao_rctm@tambovrc.magnit.ru
+  const email = selects.value; //rao_rctm@tambovrc.magnit.ru
   const subject = subjectText;
   const emailBody = emailBodyText;
   document.location = "mailto:"+email+"?subject="+subject+"&body="+emailBody;
