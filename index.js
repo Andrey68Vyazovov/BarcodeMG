@@ -21,12 +21,13 @@ console.log(arrayBarcode);
 sendEmail();
 arrayBarcode.length=0;
 counter_1=0;
+inputCounter.textContent='Отсканировано ШК: '+counter_1;
 }); 
 
 function sendEmail() {
   const email = 'rao_rctm@tambovrc.magnit.ru';
   const subject = 'transit-barcode';
-  const emailBody = arrayBarcode.join('\r\n');
+  const emailBody = arrayBarcode.join('<br/>');
   document.location = "mailto:"+email+"?subject="+subject+"&body="+emailBody;
 }
 
