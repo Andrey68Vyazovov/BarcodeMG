@@ -1,6 +1,8 @@
 const inputButton = document.querySelector(".popup__close"); 
 const inputForm = document.querySelector(".input_1"); 
+const inputCounter = document.querySelector(".counter"); 
 const arrayBarcode = [];
+let counter_1=0;
 
 
 inputForm.addEventListener('input', ()=>{
@@ -8,6 +10,8 @@ inputForm.addEventListener('input', ()=>{
     if (inputForm.value.length >=7 ) {
       arrayBarcode.push(inputForm.value+'\n');
       inputForm.value='';
+      counter_1++;
+      inputCounter.textContent='Отсканировано ШК: '+counter_1;
       }
    }, 500);
 }); 
@@ -15,6 +19,7 @@ inputForm.addEventListener('input', ()=>{
 inputButton.addEventListener('click', ()=>{
 console.log(arrayBarcode);
 sendEmail();
+arrayBarcode.length=0;
 }); 
 
 function sendEmail() {
