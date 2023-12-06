@@ -8,28 +8,26 @@ let counter_1=0;
 inputForm.addEventListener('input', ()=>{
   setTimeout(() => { 
     if (inputForm.value.length >=7 ) {
-      arrayBarcode.push(inputForm.value+'\n');
+      arrayBarcode.push(inputForm.value);
       inputForm.value='';
       counter_1++;
       inputCounter.textContent='Отсканировано ШК: '+counter_1;
       }
-   }, 500);
+   }, 750);
 }); 
 
 inputButton.addEventListener('click', ()=>{
 console.log(arrayBarcode);
 sendEmail();
 arrayBarcode.length=0;
+counter_1=0;
 }); 
 
 function sendEmail() {
   const email = 'rao_rctm@tambovrc.magnit.ru';
   const subject = 'transit-barcode';
-  const emailBody = arrayBarcode;
+  const emailBody = arrayBarcode.join('\r\n');
   document.location = "mailto:"+email+"?subject="+subject+"&body="+emailBody;
 }
-
-
-
 
 
