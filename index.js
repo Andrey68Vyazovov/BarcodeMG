@@ -1,6 +1,7 @@
 const inputButton = document.querySelector(".popup__close"); 
 const inputForm = document.querySelector(".input_1"); 
-const inputCounter = document.querySelector(".counter"); 
+const inputCounter = document.querySelector(".counter");
+const rlButton = document.querySelector(".button_reload"); 
 const selects = document.querySelector("select");
 let arrayBarcode = [];
 let emailBodyText='';
@@ -38,6 +39,10 @@ inputCounter.textContent='Отсканировано ШК: '+counter_1;
 sendEmail();
 arrayBarcode.length=0;
 }); 
+
+rlButton.addEventListener('click', () => {  
+  location.reload();
+  }); 
 
 function sendEmail() {
   const email = selects.value; //rao_rctm@tambovrc.magnit.ru

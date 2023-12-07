@@ -58,5 +58,13 @@
 .popup__close {
     width: 150px;
     height: 40px;
-    background-color: rgb(123, 144, 199);
+}
+
+.button_reload {
+    position: relative;
+    font-weight: 800;
+    top: 20px;
+    left: -150px;
+    width: 50px;
+    height: 50px;
 }
