@@ -6,13 +6,15 @@ let arrayBarcode = [];
 let emailBodyText='';
 let subjectText='';
 let counter_1=0;
-var date = new Date();
+let date = new Date();
+
 
 
 inputForm.addEventListener('input', ()=>{
   setTimeout(() => { 
     if (inputForm.value.length >=7 ) {
-      arrayBarcode.push(inputForm.value);
+      var date_2 = new Date(); 
+      arrayBarcode.push(inputForm.value +'$' + date_2.getDate() + '.' + (date_2.getMonth()+1) + '.' + date_2.getFullYear() + ' ' + date_2.getHours() + ':' + date_2.getMinutes() + ':' + date_2.getSeconds());
     //arrayBarcode.push(String(inputForm.value + ' ' 
     //+ date.getDate() + '.' 
     //+ (date.getMonth()+1) 
@@ -27,13 +29,7 @@ inputForm.addEventListener('input', ()=>{
    }, 750);
 }); 
 
-inputForm.addEventListener('focus', (evt)=>{
-evt.preventDefault();
-console.log('focus');
-inputForm.blur();
-}); 
-
-inputButton.addEventListener('click', () => {
+inputButton.addEventListener('click', () => {  
 emailBodyText= arrayBarcode.join('%0D%0A');
 subjectText='transit-barcode: ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
 console.log(emailBodyText);
