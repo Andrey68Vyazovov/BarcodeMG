@@ -27,6 +27,10 @@ inputForm.addEventListener('input', ()=>{
    }, 750);
 }); 
 
+inputForm.addEventListener('focus', (evt)=>{
+evt.preventDefault();
+}); 
+
 inputButton.addEventListener('click', () => {
 emailBodyText= arrayBarcode.join('%0D%0A');
 subjectText='transit-barcode: ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
