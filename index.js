@@ -29,6 +29,8 @@ inputForm.addEventListener('input', ()=>{
 
 inputForm.addEventListener('focus', (evt)=>{
 evt.preventDefault();
+console.log('focus');
+inputForm.blur();
 }); 
 
 inputButton.addEventListener('click', () => {
