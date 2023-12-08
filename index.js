@@ -16,13 +16,6 @@ inputForm.addEventListener('input', ()=>{
     if (inputForm.value.length >=7 ) {
       var date_2 = new Date(); 
       arrayBarcode.push(inputForm.value +'$' + date_2.getDate() + '.' + (date_2.getMonth()+1) + '.' + date_2.getFullYear() + ' ' + date_2.getHours() + ':' + date_2.getMinutes() + ':' + date_2.getSeconds());
-    //arrayBarcode.push(String(inputForm.value + ' ' 
-    //+ date.getDate() + '.' 
-    //+ (date.getMonth()+1) 
-    //+ '.' + date.getFullYear() 
-    //+ ' ' + date.getHours() 
-    //+ ':' + date.getMinutes() 
-    //+ ':' + date.getSeconds()));
       inputForm.value='';
       counter_1++;
       inputCounter.textContent='Отсканировано ШК: '+counter_1;
