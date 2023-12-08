@@ -1,9 +1,21 @@
+const form1 = document.querySelector(".form1");
+const form2 = document.querySelector(".form2"); 
+
 const inputButton = document.querySelector(".popup__close"); 
 const inputForm = document.querySelector(".input_1"); 
 const inputCounter = document.querySelector(".counter");
 const rlButton = document.querySelector(".button_reload"); 
 const tgButton = document.querySelector(".button_toggle");
-const selects = document.querySelector("select");
+const selects = document.querySelector(".select_1");
+
+const inputButton_2 = document.querySelector(".popup__close_2"); 
+const inputForm_2 = document.querySelector(".input_2"); 
+const inputForm_3 = document.querySelector(".input_3"); 
+const inputCounter_2 = document.querySelector(".counter_2");
+const rlButton_2 = document.querySelector(".button_reload_2"); 
+const tgButton_2 = document.querySelector(".button_toggle_2");
+const selects_2 = document.querySelector(".select_2");
+
 const img = document.querySelector(".svg_img");
 const img_tg = document.querySelector(".svg_toggle");
 let arrayBarcode = [];
@@ -54,7 +66,10 @@ tgButton.addEventListener('click', () => {
   },200);  
   setTimeout(() => { 
     img_tg.classList.remove('svg_toggle_rotate'); 
-  },1000);
+  },1100);
+  setTimeout(() => { 
+    toggleForm(); 
+  },1600);
   }); 
 
 function sendEmail() {
@@ -63,5 +78,15 @@ function sendEmail() {
   const emailBody = emailBodyText;
   document.location = "mailto:"+email+"?subject="+subject+"&body="+emailBody;
 }
+
+function toggleForm() {
+ if (form2.classList.contains('form_none')) {
+form1.classList.add('form_none');
+form2.classList.remove('form_none');
+ } else {
+form1.classList.remove('form_none');
+form2.classList.add('form_none');
+ }
+} 
 
 
