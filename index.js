@@ -3,6 +3,7 @@ const inputForm = document.querySelector(".input_1");
 const inputCounter = document.querySelector(".counter");
 const rlButton = document.querySelector(".button_reload"); 
 const selects = document.querySelector("select");
+const img = document.querySelector(".svg_img");
 let arrayBarcode = [];
 let emailBodyText='';
 let subjectText='';
@@ -34,7 +35,16 @@ arrayBarcode.length=0;
 }); 
 
 rlButton.addEventListener('click', () => {  
-  location.reload();
+  setTimeout(() => { 
+    img.classList.add('svg_img_rotate');  
+  },300);  
+  setTimeout(() => { 
+    img.classList.remove('svg_img_rotate'); 
+  },1000);
+  
+ 
+//setTimeout(() => { 
+  //location.reload();},1000);
   }); 
 
 function sendEmail() {
