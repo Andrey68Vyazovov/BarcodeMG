@@ -75,12 +75,34 @@
  width: 100%;
  height: 100%;
  transform: rotate(0deg);
- transition-duration: .4s;
+ transition-duration: .3s;
 }
 
 .svg_img_rotate {
     transform: rotate(180deg);
-    transition-duration: .4s;
+    transition-duration: .3s;
 }
+
+.button_toggle {
+    position: absolute;
+    border-radius: 50%;
+    font-weight: 800;
+    top: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px; 
+}
+
+.svg_toggle {
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg);
+    transition-duration: .4s;
+   }
+
+.svg_toggle_rotate {
+    transform: rotate(180deg);
+    transition-duration: .4s;
+}   
 
 
