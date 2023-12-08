@@ -38,15 +38,34 @@ inputForm.addEventListener('input', ()=>{
    }, 750);
 }); 
 
+inputForm_2.addEventListener('input', ()=>{
+  setTimeout(() => { 
+    if (inputForm_2.value.length >=7 ) {
+      arrayBarcode.push(inputForm_2.value);
+      inputForm_2.value='';
+      counter_1++;
+      inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
+      }
+   }, 750);
+}); 
+
 inputButton.addEventListener('click', () => {  
 emailBodyText= arrayBarcode.join('%0D%0A');
 subjectText='transit-barcode: ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-console.log(emailBodyText);
 counter_1=0;
 inputCounter.textContent='Отсканировано ШК: '+counter_1;
 sendEmail();
 arrayBarcode.length=0;
 }); 
+
+inputButton_2.addEventListener('click', () => {  
+  emailBodyText= arrayBarcode.join('%0D%0A');
+  subjectText='barcode('+ inputForm_3.value + ') : ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+  counter_1=0;
+  inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
+  sendEmail();
+  arrayBarcode.length=0;
+  });
 
 rlButton.addEventListener('click', () => {  
   setTimeout(() => { 
