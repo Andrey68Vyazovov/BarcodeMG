@@ -40,6 +40,7 @@ rlButton.addEventListener('click', () => {
   },300);  
   setTimeout(() => { 
     img.classList.remove('svg_img_rotate'); 
+    location.reload();
   },1000);
   
  
