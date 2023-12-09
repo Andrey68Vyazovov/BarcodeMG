@@ -65,6 +65,7 @@ inputButton_2.addEventListener('click', () => {
   inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
   sendEmail();
   arrayBarcode.length=0;
+  inputForm_3.value='';
   });
 
 rlButton.addEventListener('click', () => {  

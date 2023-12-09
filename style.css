@@ -85,6 +85,13 @@
     height: 40px;
 }
 
+.popup__close_2 {
+    width: 150px;
+    height: 40px;
+}
+
+
+
 .button_reload {
     position: absolute;
     border-radius: 50%;
@@ -135,6 +142,16 @@
     right: 15px; 
     margin: 0;
     font-size: small;
+}
+
+.mail {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 15px;
+    left: 15px; 
+    margin: 0;
+    padding: 0;  
 }
 
 
