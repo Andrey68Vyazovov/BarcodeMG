@@ -15,6 +15,7 @@ const inputCounter_2 = document.querySelector(".counter_2");
 const rlButton_2 = document.querySelector(".button_reload_2"); 
 const tgButton_2 = document.querySelector(".button_toggle_2");
 const selects_2 = document.querySelector(".select_2");
+const title = document.querySelector(".title_h");
 
 const img = document.querySelector(".svg_img");
 const img_tg = document.querySelector(".svg_toggle");
@@ -103,9 +104,11 @@ function toggleForm() {
  if (form2.classList.contains('form_none')) {
 form1.classList.add('form_none');
 form2.classList.remove('form_none');
+title.textContent="ТТ без стикеров";
  } else {
 form1.classList.remove('form_none');
 form2.classList.add('form_none');
+title.textContent="Проверка НТ";
  }
 } 
 
