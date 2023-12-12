@@ -17,6 +17,11 @@ const tgButton_2 = document.querySelector(".button_toggle_2");
 const selects_2 = document.querySelector(".select_2");
 const title = document.querySelector(".title_h");
 
+const popup = document.querySelector(".popup");
+const popupButton = document.querySelector(".popup__button-5");
+const message = document.querySelector(".message");
+const popupClose = document.querySelector(".popup__close-5");
+
 const img = document.querySelector(".svg_img");
 const img_tg = document.querySelector(".svg_toggle");
 let arrayBarcode = [];
@@ -77,9 +82,27 @@ rlButton.addEventListener('click', () => {
     img.classList.remove('svg_img_rotate'); 
   },1200);
   setTimeout(() => { 
-    location.reload(); 
+    if (counter_1!==0) {
+    popup.classList.add('popup__visible');
+    message.textContent = "есть отсканированные ШК: " + counter_1;
+    } else {
+      location.reload();
+    }
+    //location.reload(); 
   },1600);
 }); 
+
+popupButton.addEventListener('click', () => {
+  popup.classList.remove('popup__visible');
+  location.reload();
+});
+
+popupClose.addEventListener('click', () => {
+  popup.classList.remove('popup__visible');
+});
+
+
+
 
 tgButton.addEventListener('click', () => {  
   setTimeout(() => { 
