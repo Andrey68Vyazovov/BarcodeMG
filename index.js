@@ -82,7 +82,7 @@ rlButton.addEventListener('click', () => {
     img.classList.remove('svg_img_rotate'); 
   },1200);
   setTimeout(() => { 
-    if (counter_1!==0) {
+    if (counter_1>=5) {
     popup.classList.add('popup__visible');
     message.textContent = "есть отсканированные ШК: " + counter_1;
     } else {
