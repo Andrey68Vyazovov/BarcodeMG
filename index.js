@@ -30,8 +30,7 @@ let subjectText='';
 let counter_1=0;
 let date = new Date();
 
-
-
+// заполнение массива ШК по изменению полей ***************************************
 inputForm.addEventListener('input', ()=>{
   setTimeout(() => { 
     if (inputForm.value.length >=7 ) {
@@ -54,7 +53,9 @@ inputForm_2.addEventListener('input', ()=>{
       }
    }, 750);
 }); 
+// ********************************************************************************
 
+// кнопки отправки форм mail ******************************************************
 inputButton.addEventListener('click', () => {  
 emailBodyText= arrayBarcode.join('%0D%0A');
 subjectText='transit-barcode: ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
@@ -73,7 +74,37 @@ inputButton_2.addEventListener('click', () => {
   arrayBarcode.length=0;
   inputForm_3.value='';
   });
+// *******************************************************************************
 
+// переключение форм *************************************************************
+function toggleForm() {
+  if (form2.classList.contains('form_none')) {
+    counter_1=0;
+    arrayBarcode.length=0;
+    inputCounter.textContent='Отсканировано ШК: '+counter_1;
+    inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
+    inputForm_3.value='';
+    inputForm_2.value='';
+    inputForm.value='';
+ form1.classList.add('form_none');
+ form2.classList.remove('form_none');
+ title.textContent="ТТ без стикеров";
+  } else {
+    counter_1=0;
+    arrayBarcode.length=0;
+    inputCounter.textContent='Отсканировано ШК: '+counter_1;
+    inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
+    inputForm_3.value='';
+    inputForm_2.value='';
+    inputForm.value='';
+ form1.classList.remove('form_none');
+ form2.classList.add('form_none');
+ title.textContent="Проверка НТ";
+  }
+ } 
+// ******************************************************************************
+
+// слушатели кнопки обновления и смена формы **********************************************
 rlButton.addEventListener('click', () => {  
   setTimeout(() => { 
    img.classList.add('svg_img_rotate');  
@@ -83,26 +114,12 @@ rlButton.addEventListener('click', () => {
   },1200);
   setTimeout(() => { 
     if (counter_1>=5) {
-    popup.classList.add('popup__visible');
-    message.textContent = "есть отсканированные ШК: " + counter_1;
+      ntreload();
     } else {
       location.reload();
     }
-    //location.reload(); 
   },1600);
 }); 
-
-popupButton.addEventListener('click', () => {
-  popup.classList.remove('popup__visible');
-  location.reload();
-});
-
-popupClose.addEventListener('click', () => {
-  popup.classList.remove('popup__visible');
-});
-
-
-
 
 tgButton.addEventListener('click', () => {  
   setTimeout(() => { 
@@ -112,9 +129,47 @@ tgButton.addEventListener('click', () => {
     img_tg.classList.remove('svg_toggle_rotate'); 
   },1100);
   setTimeout(() => { 
-    toggleForm(); 
+    if (counter_1>=5) {
+      tgreload();
+    } else {
+      toggleForm();
+    }
   },1600);
   }); 
+
+// *******************************************************************************
+
+// функции обработки перезагрузок ************************************************
+function ntreload() {
+popup.classList.add('popup__visible');
+message.textContent = "есть отсканированные ШК: " + counter_1;
+popupButton.addEventListener('click', () => {
+  popup.classList.remove('popup__visible');
+  counter_1=0;
+  inputForm.value='';
+  inputCounter.textContent='Отсканировано ШК: '+ counter_1;
+  location.reload();
+});
+}
+
+function tgreload() {
+    popup.classList.add('popup__visible');
+    message.textContent = "есть отсканированные ШК: " + counter_1;
+    popupButton.addEventListener('click', listenerTG);
+};
+
+function listenerTG () {
+  popup.classList.remove('popup__visible');
+  toggleForm();
+  popupButton.removeEventListener('click',listenerTG);
+}
+// ***************************************************************** 
+  
+// кнопка закрытия попапа ******************************************
+popupClose.addEventListener('click', () => {
+  popup.classList.remove('popup__visible');
+});
+// *****************************************************************
 
 function sendEmail() {
   const email = selects.value; //rao_rctm@tambovrc.magnit.ru
@@ -123,16 +178,5 @@ function sendEmail() {
   document.location = "mailto:"+email+"?subject="+subject+"&body="+emailBody;
 }
 
-function toggleForm() {
- if (form2.classList.contains('form_none')) {
-form1.classList.add('form_none');
-form2.classList.remove('form_none');
-title.textContent="ТТ без стикеров";
- } else {
-form1.classList.remove('form_none');
-form2.classList.add('form_none');
-title.textContent="Проверка НТ";
- }
-} 
 
 
