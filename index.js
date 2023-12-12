@@ -30,6 +30,12 @@ let subjectText='';
 let counter_1=0;
 let date = new Date();
 
+// делаем кнопки отправить неактивными *******************************************
+inputButton.setAttribute('disabled', 'true');
+inputButton_2.setAttribute('disabled', 'true');
+
+// *******************************************************************************
+
 // заполнение массива ШК по изменению полей ***************************************
 inputForm.addEventListener('input', ()=>{
   setTimeout(() => { 
@@ -39,6 +45,7 @@ inputForm.addEventListener('input', ()=>{
       inputForm.value='';
       counter_1++;
       inputCounter.textContent='Отсканировано ШК: '+counter_1;
+      inputButton.removeAttribute("disabled");
       }
    }, 750);
 }); 
@@ -50,6 +57,7 @@ inputForm_2.addEventListener('input', ()=>{
       inputForm_2.value='';
       counter_1++;
       inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
+      inputButton_2.removeAttribute("disabled");
       }
    }, 750);
 }); 
@@ -63,6 +71,8 @@ counter_1=0;
 inputCounter.textContent='Отсканировано ШК: '+counter_1;
 sendEmail();
 arrayBarcode.length=0;
+inputForm.value='';
+inputButton.setAttribute('disabled', 'true');
 }); 
 
 inputButton_2.addEventListener('click', () => {  
@@ -72,7 +82,9 @@ inputButton_2.addEventListener('click', () => {
   inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
   sendEmail();
   arrayBarcode.length=0;
+  inputForm_2.value='';
   inputForm_3.value='';
+  inputButton_2.setAttribute('disabled', 'true');
   });
 // *******************************************************************************
 
@@ -86,6 +98,8 @@ function toggleForm() {
     inputForm_3.value='';
     inputForm_2.value='';
     inputForm.value='';
+    inputButton.setAttribute('disabled', '');
+    inputButton_2.setAttribute('disabled', '');
  form1.classList.add('form_none');
  form2.classList.remove('form_none');
  title.textContent="ТТ без стикеров";
@@ -97,6 +111,8 @@ function toggleForm() {
     inputForm_3.value='';
     inputForm_2.value='';
     inputForm.value='';
+    inputButton.setAttribute('disabled', '');
+    inputButton_2.setAttribute('disabled', '');
  form1.classList.remove('form_none');
  form2.classList.add('form_none');
  title.textContent="Проверка НТ";
