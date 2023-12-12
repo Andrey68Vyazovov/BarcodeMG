@@ -84,27 +84,17 @@
 
 .popup__close {
     display: flex;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    margin: 0;
     justify-content: space-between;
     align-items: center;
     border: 2px solid black;
     border-radius: 15px;
     font-weight: 600;
-    width: 70px;
-    height: 70px;
-    background: #dedddf url('./images/send.svg') no-repeat center / cover;
-    background-size: 90%;
-    font-size: 11px;
-}
-
-.popup__close_2 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 2px solid black;
-    border-radius: 15px;
-    font-weight: 600;
-    width: 70px;
-    height: 70px;
+    width: 55px;
+    height: 50px;
     background: #dedddf url('./images/send.svg') no-repeat center / cover;
     background-size: 90%;
     font-size: 11px;

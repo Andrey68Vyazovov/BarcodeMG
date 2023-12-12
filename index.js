@@ -8,7 +8,6 @@ const rlButton = document.querySelector(".button_reload");
 const tgButton = document.querySelector(".button_toggle");
 const selects = document.querySelector(".select_1");
 
-const inputButton_2 = document.querySelector(".popup__close_2"); 
 const inputForm_2 = document.querySelector(".input_2"); 
 const inputForm_3 = document.querySelector(".input_3"); 
 const inputCounter_2 = document.querySelector(".counter_2");
@@ -32,7 +31,6 @@ let date = new Date();
 
 // делаем кнопки отправить неактивными *******************************************
 inputButton.setAttribute('disabled', 'true');
-inputButton_2.setAttribute('disabled', 'true');
 
 // *******************************************************************************
 
@@ -41,7 +39,7 @@ inputForm.addEventListener('input', ()=>{
   setTimeout(() => { 
     if (inputForm.value.length >=7 ) {
       var date_2 = new Date(); 
-      arrayBarcode.push(inputForm.value +'$' + date_2.getDate() + '.' + (date_2.getMonth()+1) + '.' + date_2.getFullYear() + ' ' + date_2.getHours() + ':' + date_2.getMinutes() + ':' + date_2.getSeconds());
+      arrayBarcode.push(inputForm.value.split(' ')[0] +'$' + date_2.getDate() + '.' + (date_2.getMonth()+1) + '.' + date_2.getFullYear() + ' ' + date_2.getHours() + ':' + date_2.getMinutes() + ':' + date_2.getSeconds());
       inputForm.value='';
       counter_1++;
       inputCounter.textContent='Отсканировано ШК: '+counter_1;
@@ -57,7 +55,7 @@ inputForm_2.addEventListener('input', ()=>{
       inputForm_2.value='';
       counter_1++;
       inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
-      inputButton_2.removeAttribute("disabled");
+      inputButton.removeAttribute("disabled");
       }
    }, 750);
 }); 
@@ -66,26 +64,22 @@ inputForm_2.addEventListener('input', ()=>{
 // кнопки отправки форм mail ******************************************************
 inputButton.addEventListener('click', () => {  
 emailBodyText= arrayBarcode.join('%0D%0A');
-subjectText='transit-barcode: ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+if (title.textContent==="Проверка НТ") {
+  subjectText='transit-barcode: ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+} else {
+  subjectText='barcode('+ inputForm_3.value + ') : ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+};
 counter_1=0;
 inputCounter.textContent='Отсканировано ШК: '+counter_1;
+inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
 sendEmail();
 arrayBarcode.length=0;
 inputForm.value='';
+inputForm_2.value='';
+inputForm_3.value='';
 inputButton.setAttribute('disabled', 'true');
 }); 
 
-inputButton_2.addEventListener('click', () => {  
-  emailBodyText= arrayBarcode.join('%0D%0A');
-  subjectText='barcode('+ inputForm_3.value + ') : ' + date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-  counter_1=0;
-  inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
-  sendEmail();
-  arrayBarcode.length=0;
-  inputForm_2.value='';
-  inputForm_3.value='';
-  inputButton_2.setAttribute('disabled', 'true');
-  });
 // *******************************************************************************
 
 // переключение форм *************************************************************
@@ -99,7 +93,6 @@ function toggleForm() {
     inputForm_2.value='';
     inputForm.value='';
     inputButton.setAttribute('disabled', '');
-    inputButton_2.setAttribute('disabled', '');
  form1.classList.add('form_none');
  form2.classList.remove('form_none');
  title.textContent="ТТ без стикеров";
@@ -112,7 +105,6 @@ function toggleForm() {
     inputForm_2.value='';
     inputForm.value='';
     inputButton.setAttribute('disabled', '');
-    inputButton_2.setAttribute('disabled', '');
  form1.classList.remove('form_none');
  form2.classList.add('form_none');
  title.textContent="Проверка НТ";
