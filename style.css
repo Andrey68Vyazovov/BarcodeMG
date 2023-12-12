@@ -89,10 +89,10 @@
     border: 2px solid black;
     border-radius: 5px;
     font-weight: 600;
-    width: 150px;
-    height: 40px;
-    background: #cbbdda url('./images/send.svg') no-repeat right / cover;
-    background-size: 25%;
+    width: 70px;
+    height: 70px;
+    background: #d8d7da url('./images/send.svg') no-repeat center / cover;
+    background-size: 90%;
     font-size: 11px;
 }
 
