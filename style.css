@@ -98,7 +98,7 @@
     background: #dedddf url('./images/send.svg') no-repeat center / cover;
     background-size: 80%;
     font-size: 11px;
-    box-shadow: 5px 5px 6px 0 #2b2836;
+    box-shadow: 5px 5px 6px 0 #777386;
 }
 
 .popup__close:disabled {
@@ -216,7 +216,7 @@
     left: 15px;
     width: 50px;
     height: 50px;
-    box-shadow: 5px 5px 6px 0 #2b2836;
+    box-shadow: 5px 5px 6px 0 #777386;
 }
 
 .svg_img {
@@ -239,7 +239,7 @@
     right: 15px;
     width: 50px;
     height: 50px;
-    box-shadow: 5px 5px 6px 0 #2b2836;
+    box-shadow: 5px 5px 6px 0 #777386;
 }
 
 .svg_toggle {
