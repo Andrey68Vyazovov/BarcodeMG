@@ -91,24 +91,22 @@
     justify-content: space-between;
     align-items: center;
     border: 2px solid black;
-    border-radius: 15px;
+    border-radius: 40%;
     font-weight: 600;
     width: 55px;
-    height: 50px;
+    height: 55px;
     background: #dedddf url('./images/send.svg') no-repeat center / cover;
-    background-size: 90%;
+    background-size: 80%;
     font-size: 11px;
+    box-shadow: 5px 5px 6px 0 #2b2836;
 }
 
 .popup__close:disabled {
-    opacity: 0.5;
+    background: #fdfbff url('./images/send.svg') no-repeat center / cover;
+    background-size: 80%;
+    box-shadow: none;
+    opacity: 0.4;
 }
-
-.popup__close_2:disabled {
-    opacity: 0.5;
-}
-
-
 
 .popup {
     font-family: "Inter", Arial, sans-serif;
@@ -218,6 +216,7 @@
     left: 15px;
     width: 50px;
     height: 50px;
+    box-shadow: 5px 5px 6px 0 #2b2836;
 }
 
 .svg_img {
@@ -239,7 +238,8 @@
     top: 15px;
     right: 15px;
     width: 50px;
-    height: 50px; 
+    height: 50px;
+    box-shadow: 5px 5px 6px 0 #2b2836;
 }
 
 .svg_toggle {
