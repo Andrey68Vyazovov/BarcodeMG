@@ -28,6 +28,7 @@ let emailBodyText='';
 let subjectText='';
 let counter_1=0;
 let date = new Date();
+let technical = '';
 
 // делаем кнопки отправить неактивными *******************************************
 inputButton.setAttribute('disabled', 'true');
@@ -184,6 +185,8 @@ function sendEmail() {
   const subject = subjectText;
   const emailBody = emailBodyText;
   document.location = "mailto:"+email+"?subject="+subject+"&body="+emailBody;
+  technical = selects.value;
+  selects.value="";
 }
 
 
