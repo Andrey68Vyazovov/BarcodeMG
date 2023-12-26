@@ -60,14 +60,37 @@
     display: none;
 }
 
-.popup__close {
+.mail {
     display: flex;
+    flex-direction: column;
+    width: 95%;
     position: absolute;
     bottom: 15px;
-    right: 15px;
+    left: 15px; 
     margin: 0;
-    justify-content: space-between;
-    align-items: center;
+    padding: 0;  
+}
+
+.mail-form
+{
+    display: flex;
+    width: 100%;
+}
+
+.mail-form-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.select_1 {
+    width: 120%;
+}
+
+.popup__close {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0;
     border: 2px solid black;
     border-radius: 40%;
     font-weight: 600;
@@ -240,16 +263,6 @@
     font-size: small;
 }
 
-.mail {
-    display: flex;
-    flex-direction: column;
-    width: 60%;
-    position: absolute;
-    bottom: 15px;
-    left: 15px; 
-    margin: 0;
-    padding: 0;  
-}
 
 h3 {
     margin: 0;
@@ -265,8 +278,6 @@ h3 {
     margin-bottom: 10px;
 }
 
-.select_1 {
-    width: 100%;
-}
+
 
 
