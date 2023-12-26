@@ -116,6 +116,8 @@
 
 .error-email {
     border: 1.5px solid red;
+    background-color: #fac1bf;
+    box-shadow: inset 2px 2px 5px white;
 }
 
 .popup {

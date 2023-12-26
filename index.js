@@ -39,6 +39,7 @@ const validation = () => {
     selects.classList.add('error-email');
   } else {
     selects.classList.remove('error-email'); 
+    if (arrayBarcode.length>0) inputButton.removeAttribute("disabled");
   }
 }
 
@@ -47,8 +48,6 @@ validation();
 selects.addEventListener('input', () => {
   validation();
 });
-
-
 
 
 // заполнение массива ШК по изменению полей ***************************************
@@ -60,7 +59,7 @@ inputForm.addEventListener('input', ()=>{
       inputForm.value='';
       counter_1++;
       inputCounter.textContent='Отсканировано ШК: '+counter_1;
-      inputButton.removeAttribute("disabled");
+      if (selects.value!=='') inputButton.removeAttribute("disabled");
       }
    }, 750);
 }); 
@@ -72,7 +71,7 @@ inputForm_2.addEventListener('input', ()=>{
       inputForm_2.value='';
       counter_1++;
       inputCounter_2.textContent='Отсканировано ШК: '+counter_1;
-      inputButton.removeAttribute("disabled");
+      if (selects.value!=='') inputButton.removeAttribute("disabled");
       }
    }, 750);
 }); 
