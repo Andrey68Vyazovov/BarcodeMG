@@ -34,6 +34,22 @@ let technical = '';
 inputButton.setAttribute('disabled', 'true');
 
 // *******************************************************************************
+const validation = () => {
+  if (selects.value==="") {
+    selects.classList.add('error-email');
+  } else {
+    selects.classList.remove('error-email'); 
+  }
+}
+
+validation();
+
+selects.addEventListener('input', () => {
+  validation();
+});
+
+
+
 
 // заполнение массива ШК по изменению полей ***************************************
 inputForm.addEventListener('input', ()=>{

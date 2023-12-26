@@ -84,6 +84,11 @@
 
 .select_1 {
     width: 90%;
+    border-radius: 3px;
+}
+
+.select_1:focus {
+    border: 1.5px solid black;
 }
 
 .popup__close {
@@ -107,6 +112,10 @@
     background-size: 80%;
     box-shadow: none;
     opacity: 0.4;
+}
+
+.error-email {
+    border: 1.5px solid red;
 }
 
 .popup {
