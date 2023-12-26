@@ -33,15 +33,14 @@ let technical = '';
 
 //камера
 let enhancer = null;
-const barcodef = async () => {
+
+
+barcodeButton.addEventListener('click', () => {
+  (async () => {
     enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
     document.getElementById("enhancerUIContainer").appendChild(enhancer.getUIElement());
     await enhancer.open(true);
-};
-
-barcodeButton.addEventListener('click', () => {
-  console.log('dfgwrefewr');
-  barcodef();
+})();
 });
 
 
