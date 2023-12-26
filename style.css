@@ -36,6 +36,18 @@
     gap: 20px;
 }
 
+.form__div_1 {
+    display: flex;
+    gap: 7px;
+    justify-content: center;
+    align-items: center;
+}
+
+.input_1 {
+    position: relative;
+    top: 1px;
+}
+
 .form_2 {
     
     width: 100%;
@@ -219,6 +231,15 @@
     color: #c4c4c4;
     border: solid 1px #c4c4c4;
   }
+
+.popup__button-7 {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    background: #dedddf url('./images/photo-camera.svg') no-repeat center / cover;
+    background-size: 80%;
+    box-shadow: 2px 2px 3px 0 #777386;
+}
 
 .button_reload {
     position: absolute;
