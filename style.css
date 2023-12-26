@@ -63,7 +63,7 @@
 .mail {
     display: flex;
     flex-direction: column;
-    width: 95%;
+    width: 100%;
     position: absolute;
     bottom: 15px;
     left: 15px; 
@@ -74,7 +74,7 @@
 .mail-form
 {
     display: flex;
-    width: 100%;
+    width: 90%;
 }
 
 .mail-form-block {
@@ -83,13 +83,13 @@
 }
 
 .select_1 {
-    width: 120%;
+    width: 90%;
 }
 
 .popup__close {
     position: absolute;
     bottom: 0;
-    right: 0;
+    right: 30px;
     margin: 0;
     border: 2px solid black;
     border-radius: 40%;
