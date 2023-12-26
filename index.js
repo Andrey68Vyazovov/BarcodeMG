@@ -29,6 +29,7 @@ let subjectText='';
 let counter_1=0;
 let date = new Date();
 let technical = '';
+let mail = '';
 
 // делаем кнопки отправить неактивными *******************************************
 inputButton.setAttribute('disabled', 'true');
@@ -181,12 +182,14 @@ popupClose.addEventListener('click', () => {
 // *****************************************************************
 
 function sendEmail() {
-  const email = selects.value; //rao_rctm@tambovrc.magnit.ru
+  const email = selects.value;
   const subject = subjectText;
   const emailBody = emailBodyText;
   document.location = "mailto:"+email+"?subject="+subject+"&body="+emailBody;
   technical = selects.value;
+  mail = selects.value;
   selects.value="";
+
 }
 
 
