@@ -18,6 +18,7 @@ const title = document.querySelector(".title_h");
 
 const popup = document.querySelector(".popup");
 const popupButton = document.querySelector(".popup__button-5");
+const barcodeButton = document.querySelector(".popup__button-7");
 const message = document.querySelector(".message");
 const popupClose = document.querySelector(".popup__close-5");
 
@@ -29,6 +30,21 @@ let subjectText='';
 let counter_1=0;
 let date = new Date();
 let technical = '';
+
+//камера
+let enhancer = null;
+const barcodef = async () => {
+    enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
+    document.getElementById("enhancerUIContainer").appendChild(enhancer.getUIElement());
+    await enhancer.open(true);
+};
+
+barcodeButton.addEventListener('click', () => {
+  console.log('dfgwrefewr');
+  barcodef();
+});
+
+
 
 // делаем кнопки отправить неактивными *******************************************
 inputButton.setAttribute('disabled', 'true');
