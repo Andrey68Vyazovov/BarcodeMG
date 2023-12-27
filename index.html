@@ -74,6 +74,9 @@
     (async () => {
         enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
         document.getElementById("enhancerUIContainer").appendChild(enhancer.getUIElement());
+        document.querySelector(".dce-btn-close").onclick = () => {
+    document.querySelector(".popup_type_photo").classList.remove('popup__visible');
+};
         await enhancer.open(true);
     })();
 
@@ -93,6 +96,8 @@
             popWindow.document.body.appendChild(frame.canvas);
         }
     };
+  
 </script>
+
 </body> 
 </html>
