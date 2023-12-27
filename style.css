@@ -166,6 +166,21 @@
     padding: 34px 36px;
   }
 
+  .popup_type_photo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .popup__content_2 {
+    width: 95%;
+    height: 70%;
+    background-color: #fff;
+    border-radius: 10px;
+    position: relative;
+    box-sizing: border-box;
+    padding: 10px 10px;
+  }
+
 .popup__close-5 {
     width: 25px;
     height: 25px;
