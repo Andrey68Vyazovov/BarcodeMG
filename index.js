@@ -1,5 +1,6 @@
 const form1 = document.querySelector(".form1");
 const form2 = document.querySelector(".form2"); 
+const form3 = document.querySelector(".form"); 
 
 const inputButton = document.querySelector(".popup__close"); 
 const inputForm = document.querySelector(".input_1"); 
@@ -17,8 +18,10 @@ const selects_2 = document.querySelector(".select_2");
 const title = document.querySelector(".title_h");
 
 const popup = document.querySelector(".popup");
+const popup_2 = document.querySelector(".popup_type_photo");
 const popupButton = document.querySelector(".popup__button-5");
 const barcodeButton = document.querySelector(".popup__button-7");
+const barcode2Button = document.querySelector(".popup__button-8");
 const message = document.querySelector(".message");
 const popupClose = document.querySelector(".popup__close-5");
 
@@ -32,17 +35,11 @@ let date = new Date();
 let technical = '';
 
 //камера
-let enhancer = null;
 
-
-barcodeButton.addEventListener('click', () => {
-  (async () => {
-    enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
-    document.getElementById("enhancerUIContainer").appendChild(enhancer.getUIElement());
-    await enhancer.open(true);
-})();
-});
-
+form3.addEventListener('submit', (evt)=>{
+  evt.preventDefault();
+  popup_2.classList.remove('popup__visible');
+})
 
 
 // делаем кнопки отправить неактивными *******************************************

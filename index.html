@@ -18,8 +18,8 @@
       <p class="version"></p>
       <div class="mail">
         <form class="mail-form" autocomplete="on">
-          <div class="mail-form-block"
-            <label class="select" for="student6">Укажите почту:</label>
+          <div class="mail-form-block">
+            <label for="student6" class="select">Укажите почту:</label>
             <input type="email" id="student6" name="student6" class="select_1"></input>
           </div>
           <button type="submit" class="popup__close"></button>
@@ -63,7 +63,36 @@
       <button class="button popup__button-5">Да</button>
     </div>
   </div>
-  <div id="enhancerUIContainer" style="height: 90vh;"></div>
+  <div class="popup popup_type_photo">
+    <button id="capture" class="button popup__button-8">Capture</button>
+    <div id="enhancerUIContainer" class="popup__content">
+    </div>
+  </div>
   <script src="index.js"></script>
+  <script>
+    let enhancer = null;
+    (async () => {
+        enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
+        document.getElementById("enhancerUIContainer").appendChild(enhancer.getUIElement());
+        await enhancer.open(true);
+    })();
+
+    document.getElementById('capture').onclick = () => {
+        if (enhancer) {
+            let frame = enhancer.getFrame();
+        
+            let width = screen.availWidth;
+            let height = screen.availHeight;
+            let popW = 640, popH = 640;
+            let left = (width - popW) / 2;
+            let top = (height - popH) / 2;
+
+            popWindow = window.open('', 'popup', 'width=' + popW + ',height=' + popH +
+                ',top=' + top + ',left=' + left + ', scrollbars=yes');
+
+            popWindow.document.body.appendChild(frame.canvas);
+        }
+    };
+</script>
 </body> 
 </html>
