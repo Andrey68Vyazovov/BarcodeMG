@@ -81,6 +81,7 @@
         document.querySelector(".dce-btn-close").addEventListener('click', () => {
         console.log("закрытие");
         document.querySelector(".popup_type_photo").classList.remove('popup__visible');
+        document.getElementById("enhancerUIContainer").removeChild(document.getElementById("enhancerUIContainer").getElementsByTagName('div')[0]);
         });
 
         await enhancer.open(true);
