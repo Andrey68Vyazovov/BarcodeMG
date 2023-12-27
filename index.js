@@ -38,7 +38,7 @@ let technical = '';
 
 form3.addEventListener('submit', (evt)=>{
   evt.preventDefault();
-  popup_2.classList.remove('popup__visible');
+  popup_2.classList.add('popup__visible');
 })
 
 
