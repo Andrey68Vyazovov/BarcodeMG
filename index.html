@@ -73,12 +73,16 @@
     const barcodeButton5 = document.querySelector(".popup__button-7");
 
     let enhancer = null;
+
     barcodeButton5.addEventListener('click', async () => {
         enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
         document.getElementById("enhancerUIContainer").appendChild(enhancer.getUIElement());
-        document.querySelector(".dce-btn-close").onclick = () => {
+       
+        document.querySelector(".dce-btn-close").addEventListener('click', () => {
+        console.log("закрытие");
         document.querySelector(".popup_type_photo").classList.remove('popup__visible');
-};
+        });
+
         await enhancer.open(true);
     });
 
