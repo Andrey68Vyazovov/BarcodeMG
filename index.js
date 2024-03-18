@@ -22,6 +22,8 @@ const popup_2 = document.querySelector(".popup_type_photo");
 const popupButton = document.querySelector(".popup__button-5");
 const barcodeButton = document.querySelector(".popup__button-7");
 const barcode2Button = document.querySelector(".popup__button-8");
+const pencilButton = document.querySelector(".popup__button-10");
+const checkButton = document.querySelector(".popup__button-11");
 const message = document.querySelector(".message");
 const popupClose = document.querySelector(".popup__close-5");
 
@@ -42,6 +44,45 @@ form3.addEventListener('submit', (evt)=>{
   evt.preventDefault();
   popup_2.classList.add('popup__visible');
 });
+
+
+let state = false;
+pencilButton.addEventListener('click', (evt)=>{
+  evt.preventDefault();
+ if(!state) {
+  state=!state;
+  //barcodeButton.setAttribute("disabled");
+  barcodeButton.setAttribute('disabled', 'true');
+  barcodeButton.setAttribute('style','z-index: -10;');
+  checkButton.setAttribute('style','z-index: 10;');
+  pencilButton.setAttribute('style','background: #dedddf url("./images/pen-slash.svg") no-repeat center / cover; background-size: 80%');
+}
+  else {
+  state=!state;
+  //popupButton.removeAttribute("disabled");
+  barcodeButton.removeAttribute("disabled");
+  barcodeButton.setAttribute('style','z-index: 10;');
+  checkButton.setAttribute('style','z-index: -10;');
+  pencilButton.setAttribute('style','background: #dedddf url("./images/pencil.svg") no-repeat center / cover; background-size: 80%');}  
+  }
+);
+
+checkButton.addEventListener('click',(evt)=>{
+evt.preventDefault();
+var date_2 = new Date(); 
+arrayBarcode.push(inputForm.value.split(' ')[0] +'$' + date_2.getDate() + '.' + (date_2.getMonth()+1) + '.' + date_2.getFullYear() + ' ' + date_2.getHours() + ':' + date_2.getMinutes() + ':' + date_2.getSeconds());
+inputForm.value='';
+counter_1++;
+inputCounter.textContent='Отсканировано ШК: '+counter_1;
+if (selects.value!=='') inputButton.removeAttribute("disabled");
+inputForm.focus();
+}
+);
+
+
+
+
+
 
 
 // делаем кнопки отправить неактивными *******************************************
@@ -66,6 +107,7 @@ selects.addEventListener('input', () => {
 
 // заполнение массива ШК по изменению полей ***************************************
 inputForm.addEventListener('input', ()=>{
+  if(!state){
   setTimeout(() => { 
     if (inputForm.value.length >=7 ) {
       var date_2 = new Date(); 
@@ -75,7 +117,7 @@ inputForm.addEventListener('input', ()=>{
       inputCounter.textContent='Отсканировано ШК: '+counter_1;
       if (selects.value!=='') inputButton.removeAttribute("disabled");
       }
-   }, 750);
+   }, 750);}
 }); 
 
 inputForm_2.addEventListener('input', ()=>{

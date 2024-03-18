@@ -37,6 +37,7 @@
 }
 
 .form__div_1 {
+    position: relative;
     display: flex;
     gap: 7px;
     justify-content: center;
@@ -252,6 +253,28 @@
     height: 30px;
     border-radius: 5px;
     background: #dedddf url('./images/photo-camera.svg') no-repeat center / cover;
+    background-size: 80%;
+    box-shadow: 2px 2px 3px 0 #777386;
+}
+
+.popup__button-10 {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    background: #dedddf url('./images/pencil.svg') no-repeat center / cover;
+    background-size: 80%;
+    box-shadow: 2px 2px 3px 0 #777386;
+}
+
+.popup__button-11 {
+    position: absolute;
+    left: 214px;
+    top: 0;
+    z-index: -10;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    background: #dedddf url('./images/check.svg') no-repeat center / cover;
     background-size: 80%;
     box-shadow: 2px 2px 3px 0 #777386;
 }
