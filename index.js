@@ -56,6 +56,7 @@ pencilButton.addEventListener('click', (evt)=>{
   barcodeButton.setAttribute('style','z-index: -10; position: absolute;');
   checkButton.setAttribute('style','z-index: 10; position: relative;');
   pencilButton.setAttribute('style','background: #dedddf url("./images/pen-slash.svg") no-repeat center / cover; background-size: 80%');
+  inputForm.focus();
 }
   else {
   state=!state;
@@ -63,7 +64,9 @@ pencilButton.addEventListener('click', (evt)=>{
   barcodeButton.removeAttribute("disabled");
   barcodeButton.setAttribute('style','z-index: 10; position: relative;');
   checkButton.setAttribute('style','z-index: -10; position: absolute;');
-  pencilButton.setAttribute('style','background: #dedddf url("./images/pencil.svg") no-repeat center / cover; background-size: 80%');}  
+  pencilButton.setAttribute('style','background: #dedddf url("./images/pencil.svg") no-repeat center / cover; background-size: 80%');
+  inputForm.focus();
+}  
   }
 );
 
