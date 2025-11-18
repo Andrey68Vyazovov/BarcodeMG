@@ -1,7 +1,7 @@
-// src/components/CameraScanner/CameraScanner.tsx
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { BrowserMultiFormatReader } from '@zxing/browser';
 import styles from './CameraScanner.module.scss';
+import beepSound from '@/public/sounds/beep.wav';
 
 interface CameraScannerProps {
   onBarcodeScanned: (barcode: string) => void;
@@ -25,9 +25,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
 
   // Звук
   useEffect(() => {
-    audioRef.current = new Audio(
-      'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAkJCQkJCQwMDAwMDAw8LCwsLBQwMDAwMD/w8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw=='
-    );
+    audioRef.current = new Audio(beepSound);
   }, []);
 
   const playBeep = () => {
