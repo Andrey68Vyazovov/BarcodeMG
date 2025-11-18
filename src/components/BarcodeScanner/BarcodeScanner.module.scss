@@ -1,0 +1,81 @@
+.form1 {
+  display: flex;
+}
+
+.form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px auto;
+  gap: 20px;
+}
+
+.form_div_1 {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+  align-items: center;
+}
+
+.input_1 {
+  position: relative;
+  top: 1px;
+}
+
+// .counter {
+//   // Стили для счетчика
+// }
+
+.button {
+  border: none;
+  cursor: pointer;
+
+  &.popup {
+    &__button_7 {
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+      background: #dedddf url('./images/photo-camera.svg') no-repeat center / cover;
+      background-size: 80%;
+      box-shadow: 2px 2px 3px 0 #777386;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    &__button_10 {
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+      background: #dedddf url('./images/pencil.svg') no-repeat center / cover;
+      background-size: 80%;
+      box-shadow: 2px 2px 3px 0 #777386;
+
+      &.manualActive {
+        background: #dedddf url('./images/pen-slash.svg') no-repeat center / cover;
+        background-size: 80%;
+      }
+    }
+
+    &__button_11 {
+      position: absolute;
+      z-index: -10;
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+      background: #dedddf url('./images/check.svg') no-repeat center / cover;
+      background-size: 80%;
+      box-shadow: 2px 2px 3px 0 #777386;
+
+      &.manualActive {
+        z-index: 10;
+        position: relative;
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+.mail {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.mailForm {
+  display: flex;
+  width: 90%;
+
+  &_block {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.select {
+  margin-bottom: 10px;
+
+  &_1 {
+    width: 90%;
+    border-radius: 3px;
+
+    &:focus {
+      border: 1.5px solid black;
+    }
+  }
+}
+
+.popup {
+  &__close {
+    position: absolute;
+    bottom: 0;
+    right: 30px;
+    margin: 0;
+    border: 2px solid black;
+    border-radius: 40%;
+    font-weight: 600;
+    width: 55px;
+    height: 55px;
+    background: #dedddf url('./images/send.svg') no-repeat center / cover;
+    background-size: 80%;
+    font-size: 11px;
+    box-shadow: 5px 5px 6px 0 #777386;
+
+    &:disabled {
+      background: #fdfbff url('./images/send.svg') no-repeat center / cover;
+      background-size: 80%;
+      box-shadow: none;
+      opacity: 0.4;
+    }
+  }
+}
+
+.errorEmail {
+  border: 1.5px solid red;
+  background-color: #fac1bf;
+  box-shadow: inset 2px 2px 5px white;
+}

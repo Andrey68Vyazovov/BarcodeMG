@@ -1,4 +1,10 @@
 import { useCallback, useState } from "react"
+import { ControlButtons } from "./components/ControlButtons"
+import { EmailForm } from "./components/EmailForm"
+import { Title } from "./components/Title"
+import { BarcodeScanner } from "./components/BarcodeScanner"
+import { StoreForm } from "./components/StoreForm"
+import styles from './styles/styles.module.scss'
 
 export function App() {
   const [currentForm, setCurrentForm] = useState<'form1' | 'form2'>('form1')
@@ -25,7 +31,7 @@ export function App() {
   const handleBarcodeInput1 = useCallback((value: string) => {
     setBarcodeInput(value)
     
-    // Автоматическое добавление при сканировании (как в оригинале)
+    // Автоматическое добавление при сканировании
     if (!isManualInput && value.length >= 7) {
       const now = new Date()
       const timestamp = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
@@ -92,95 +98,51 @@ export function App() {
     }
   }, [email, barcodes, currentForm, storeNumber])
 
+  const handleOpenCamera = useCallback(() => {
+    // Здесь будет логика открытия камеры
+    console.log('Открываем камеру')
+  }, [])
+
   const isSendDisabled = !email || barcodes.length === 0
 
   return (
-    <div className="page">
-      <div className="main-form">
-        <button type="button" className="button_reload" onClick={handleReload}>
-          <img src="./images/refresh.svg" className="svg_img" />
-        </button>
-        
-        <button type="button" className="button_toggle" onClick={toggleForm}>
-          <img src="./images/sliders.svg" className="svg_toggle" />
-        </button>
+    <div className={styles.page}>
+      <div className={styles.mainForm}>
+        <ControlButtons 
+          onReload={handleReload}
+          onToggleForm={toggleForm}
+        />
 
-        <div className="mail">
-          <form className="mail-form" autoComplete="on" onSubmit={handleSendEmail}>
-            <div className="mail-form-block">
-              <label htmlFor="student6" className="select">Укажите почту:</label>
-              <input 
-                type="email" 
-                id="student6" 
-                name="student6" 
-                className={`select_1 ${!email ? 'error-email' : ''}`}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <button 
-              type="submit" 
-              className="popup__close"
-              disabled={isSendDisabled}
-            />
-          </form>
-        </div>
+        <EmailForm 
+          email={email}
+          isSendDisabled={isSendDisabled}
+          onEmailChange={setEmail}
+          onSendEmail={handleSendEmail}
+        />
 
-        <div className="title">
-          <h3 className="title_h">
-            {currentForm === 'form1' ? 'Проверка НТ' : 'ТТ без стикеров'}
-          </h3>
-        </div>
+        <Title currentForm={currentForm} />
 
         {currentForm === 'form1' ? (
-          <div className="form1">
-            <form method="GET" className="form" onSubmit={handleManualSubmit}>
-              <label>Отсканируйте ШК:</label>
-              <div className="form__div_1">
-                <button 
-                  type="button"
-                  className={`button popup__button-10 ${isManualInput ? 'manual-active' : ''}`}
-                  onClick={toggleManualInput}
-                />
-                <input 
-                  className="input_1" 
-                  autoFocus 
-                  placeholder={isManualInput ? "ручной ввод" : "сканер"}
-                  value={barcodeInput}
-                  onChange={(e) => handleBarcodeInput1(e.target.value)}
-                />
-                <button type="button" className="button popup__button-7" />
-                <button 
-                  type="submit"
-                  className={`button popup__button-11 ${isManualInput ? 'manual-active' : ''}`} 
-                />
-              </div>
-              <label className="counter">Отсканировано ШК: {barcodes.length}</label>
-            </form>
-          </div>
+          <BarcodeScanner 
+            barcodeInput={barcodeInput}
+            barcodesCount={barcodes.length}
+            isManualInput={isManualInput}
+            onBarcodeChange={handleBarcodeInput1}
+            onManualSubmit={handleManualSubmit}
+            onToggleManualInput={toggleManualInput}
+            onOpenCamera={handleOpenCamera}
+          />
         ) : (
-          <div className="form2">
-            <form method="GET" className="form_2">
-              <label>Введите номер ТТ:</label>
-              <input 
-                className="input_3" 
-                autoFocus 
-                value={storeNumber}
-                onChange={(e) => setStoreNumber(e.target.value)}
-              />
-              <label>Отсканируйте ШК:</label>
-              <input 
-                className="input_2" 
-                autoFocus 
-                value={barcodeInput2}
-                onChange={(e) => handleBarcodeInput2(e.target.value)}
-              />
-              <label className="counter_2">Отсканировано ШК: {barcodes.length}</label>
-            </form>
-          </div>
+          <StoreForm 
+            storeNumber={storeNumber}
+            barcodeInput2={barcodeInput2}
+            barcodesCount={barcodes.length}
+            onStoreNumberChange={setStoreNumber}
+            onBarcodeChange={handleBarcodeInput2}
+          />
         )}
 
-        <p className="version">v2.0 react</p>
+        <p className={styles.version}>v2.0 react</p>
       </div>
     </div>
   )
