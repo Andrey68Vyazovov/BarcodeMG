@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/',
+  base: '/BarcodeMG/', // Имя вашего репозитория на GitHub
   server: {
     port: 3000
   },
