@@ -96,3 +96,18 @@
     background: #0056b3;
   }
 }
+
+.cornerTopLeft,
+.cornerTopRight,
+.cornerBottomLeft,
+.cornerBottomRight {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #00ff00;
+}
+
+.cornerTopLeft     { border-right: none; border-bottom: none; top: -2px; left: -2px; }
+.cornerTopRight    { border-left: none;  border-bottom: none; top: -2px; right: -2px; }
+.cornerBottomLeft  { border-right: none; border-top: none;    bottom: -2px; left: -2px; }
+.cornerBottomRight { border-left: none;  border-top: none;    bottom: -2px; right: -2px; }
