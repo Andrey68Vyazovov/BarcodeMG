@@ -25,8 +25,9 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
 
   // Звук
   useEffect(() => {
-    audioRef.current = new Audio('/sounds/scan-beep.mp3');
-    audioRef.current.preload = 'auto';
+    audioRef.current = new Audio(
+      'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAkJCQkJCQwMDAwMDAw8LCwsLBQwMDAwMD/w8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw=='
+    );
   }, []);
 
   const playBeep = () => {
