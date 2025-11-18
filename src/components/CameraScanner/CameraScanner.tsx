@@ -1,7 +1,16 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { BrowserMultiFormatReader } from '@zxing/browser';
+// src/components/CameraScanner/CameraScanner.tsx
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import styles from './CameraScanner.module.scss';
 import beepSound from '../../assets/sounds/beep.wav';
+import {
+  SCAN_INTERVAL_MS,
+  TARGET_VIDEO_WIDTH,
+  TARGET_VIDEO_HEIGHT,
+  MAX_WORKERS,
+  FORMAT_GROUPS,
+  BEEP_VOLUME,
+  audioRef,
+} from '../../constants';
 
 interface CameraScannerProps {
   onBarcodeScanned: (barcode: string) => void;
@@ -14,106 +23,140 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const readerRef = useRef<BrowserMultiFormatReader | null>(null);
-  const requestRef = useRef<number | null>(null);
+  const workersRef = useRef<Worker[]>([]);
+  const jobIdRef = useRef(0);
+  const activeJobRef = useRef<number | null>(null);
+  const intervalRef = useRef<number | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Состояние результата
   const [scanResult, setScanResult] = useState<{ format: string; text: string } | null>(null);
-  const [isBlocked, setIsBlocked] = useState(false); // блокировка сканирования
+  const [isBlocked, setIsBlocked] = useState(false);
 
-  // Звук
+  // Звук — теперь правильно
   useEffect(() => {
-    audioRef.current = new Audio(beepSound);
+    const audio = new Audio(beepSound);
+    audio.volume = BEEP_VOLUME;
+    audioRef.current = audio;
   }, []);
 
   const playBeep = () => {
-    audioRef.current?.play().catch(() => {
-      // iOS может блокировать автозвук без взаимодействия — игнорируем
-    });
+    audioRef.current?.play().catch(() => {});
   };
 
-  const tick = useCallback(() => {
-    if (isBlocked || !videoRef.current || !canvasRef.current || !readerRef.current) return;
+  // Инициализация воркеров
+  useEffect(() => {
+    for (let i = 0; i < MAX_WORKERS; i++) {
+      const worker = new Worker(new URL('../../workers/barcodeWorker.ts', import.meta.url), {
+        type: 'module',
+      });
+      workersRef.current.push(worker);
+    }
+
+    return () => {
+      workersRef.current.forEach(w => w.terminate());
+      workersRef.current = [];
+    };
+  }, []);
+
+  const captureAndDispatch = useCallback(() => {
+    if (isBlocked || !videoRef.current || !canvasRef.current) return;
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx || video.readyState !== video.HAVE_ENOUGH_DATA) return;
 
-    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-      canvas.width = video.videoWidth || video.clientWidth;
-      canvas.height = video.videoHeight || video.clientHeight;
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.width = TARGET_VIDEO_WIDTH;
+    canvas.height = TARGET_VIDEO_HEIGHT;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      try {
-        const result = readerRef.current.decodeFromCanvas(canvas);
-        if (result) {
-          const format = result.getBarcodeFormat().toString().replace('FORMAT_', '').replace('_', '-');
-          const text = result.getText();
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const jobId = ++jobIdRef.current;
+    activeJobRef.current = jobId;
 
-          // Показываем результат
-          setScanResult({ format, text });
-          setIsBlocked(true);
+    let resolved = false;
+
+    FORMAT_GROUPS.forEach((formats, index) => {
+      if (resolved || activeJobRef.current !== jobId) return;
+
+      const worker = workersRef.current[index];
+      if (!worker) return;
+
+      const handler = (e: MessageEvent) => {
+        if (e.data.jobId !== jobId || resolved) {
+          worker.removeEventListener('message', handler);
+          return;
+        }
+
+        if (e.data.success) {
+          resolved = true;
+          activeJobRef.current = null;
+          worker.removeEventListener('message', handler);
+
+          const formatName = e.data.format.toString().replace('FORMAT_', '').replace('_', '-');
+
+          setScanResult({ format: formatName, text: e.data.text });
           playBeep();
+          onBarcodeScanned(e.data.text);
+          setIsBlocked(true);
 
-          // Передаём наверх (в App)
-          onBarcodeScanned(text);
-
-          // Автоматически скрываем через 2.5 сек и разблокируем
           setTimeout(() => {
             setScanResult(null);
             setIsBlocked(false);
           }, 2500);
         }
-      } catch (err: any) {
-        if (err.name !== 'NotFoundException') {
-          console.warn('ZXing ошибка:', err);
-        }
-      }
-    }
+      };
 
-    requestRef.current = requestAnimationFrame(tick);
-  }, [onBarcodeScanned, isBlocked]);
+      worker.addEventListener('message', handler);
+      worker.postMessage({ imageData, formats, jobId });
+    });
+  }, [isBlocked, onBarcodeScanned]);
 
+  // Правильный запуск камеры и сканирования
   useEffect(() => {
-    const startScanning = async () => {
-      try {
-        readerRef.current = new BrowserMultiFormatReader();
-        const hints = new Map();
-        hints.set(5, true); // TRY_HARDER
-        hints.set(1, ['EAN_13', 'EAN_8', 'CODE_128', 'CODE_39', 'QR_CODE']);
-        readerRef.current.hints = hints;
+    let stream: MediaStream | null = null;
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment', width: { ideal: 1280 } },
+    const startCamera = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'environment',
+            width: { ideal: TARGET_VIDEO_WIDTH },
+            height: { ideal: TARGET_VIDEO_HEIGHT },
+          },
         });
+
         streamRef.current = stream;
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.setAttribute('playsinline', 'true');
           await videoRef.current.play();
-          requestRef.current = requestAnimationFrame(tick);
+
+          // Запускаем интервал
+          intervalRef.current = window.setInterval(captureAndDispatch, SCAN_INTERVAL_MS);
         }
       } catch (err: any) {
         alert(`Камера недоступна: ${err.message || err}`);
       }
     };
 
-    startScanning();
+    startCamera();
 
+    // Очистка
     return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      readerRef.current = null;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
       streamRef.current?.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
     };
-  }, [tick]);
+  }, [captureAndDispatch]);
 
   const handleClose = () => {
-    if (requestRef.current) cancelAnimationFrame(requestRef.current);
-    readerRef.current = null;
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    workersRef.current.forEach(w => w.terminate());
     streamRef.current?.getTracks().forEach(t => t.stop());
     onClose();
   };
@@ -121,13 +164,11 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   return (
     <div className={styles.cameraOverlay}>
       <div className={styles.cameraContainer}>
-        {/* Заголовок */}
         <div className={styles.cameraHeader}>
           <h3>Наведите на штрих-код</h3>
           <button className={styles.closeButton} onClick={handleClose}>×</button>
         </div>
 
-        {/* Видео + рамка */}
         <div className={styles.cameraPreview}>
           <video ref={videoRef} className={styles.videoElement} playsInline muted autoPlay />
           <canvas ref={canvasRef} style={{ display: 'none' }} />
@@ -139,15 +180,13 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
             <div className={styles.cornerBottomRight}></div>
           </div>
 
-          {/* Анимация "сканирующая линия" (по желанию) */}
           <div className={`${styles.scanLine} ${isBlocked ? styles.paused : ''}`}></div>
         </div>
 
-        {/* Попап с результатом */}
         {scanResult && (
           <div className={styles.resultOverlay}>
             <div className={styles.resultCard}>
-              <div className={styles.resultIcon}>✓</div>
+              <div className={styles.resultIcon}>Checkmark</div>
               <div className={styles.resultFormat}>{scanResult.format}</div>
               <div className={styles.resultCode}>{scanResult.text}</div>
             </div>
