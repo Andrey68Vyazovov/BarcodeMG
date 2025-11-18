@@ -83,6 +83,12 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       if (!worker) return;
 
       const handler = (e: MessageEvent) => {
+
+        if (e.data.type === 'debug') {
+          console.log('Worker log:', e.data.text);
+          return;
+        }
+        
         if (e.data.jobId !== jobId || resolved) {
           worker.removeEventListener('message', handler);
           return;
