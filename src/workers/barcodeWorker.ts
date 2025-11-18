@@ -4,6 +4,7 @@ import { MultiFormatReader, DecodeHintType, RGBLuminanceSource, BinaryBitmap, Hy
 const readerCache = new Map<string, MultiFormatReader>();
 
 self.onmessage = (e: MessageEvent) => {
+  console.log('Воркер получил кадр!', e.data.jobId, 'форматов:', e.data.formats.length);
   const { buffer, width, height, formats, jobId } = e.data;
 
   // Создаём LuminanceSource напрямую из буфера — без canvas вообще!
