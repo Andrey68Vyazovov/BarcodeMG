@@ -1,10 +1,19 @@
 // src/workers/barcodeWorker.ts
-import { MultiFormatReader, DecodeHintType } from '@zxing/library';
+import { MultiFormatReader, DecodeHintType, RGBLuminanceSource, BinaryBitmap, HybridBinarizer } from '@zxing/library';
 
 const readerCache = new Map<string, MultiFormatReader>();
 
-self.onmessage = async (e: MessageEvent) => {
-  const { imageData, formats, jobId } = e.data;
+self.onmessage = (e: MessageEvent) => {
+  const { buffer, width, height, formats, jobId } = e.data;
+
+  // Создаём LuminanceSource напрямую из буфера — без canvas вообще!
+  const luminanceSource = new RGBLuminanceSource(
+    new Uint8ClampedArray(buffer),
+    width,
+    height
+  );
+
+  const binaryBitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
 
   const key = formats.join(',');
   let reader = readerCache.get(key);
@@ -18,7 +27,7 @@ self.onmessage = async (e: MessageEvent) => {
   }
 
   try {
-    const result = reader.decode(imageData);
+    const result = reader.decode(binaryBitmap);
     self.postMessage({
       success: true,
       text: result.getText(),
