@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { BarcodeScanner } from '../../utils/barcodeScanner';
+// src/components/CameraScanner/CameraScanner.tsx
+import React, { useRef, useEffect, useCallback } from 'react';
+import { BrowserMultiFormatReader } from '@zxing/browser';
 import styles from './CameraScanner.module.scss';
 
 interface CameraScannerProps {
@@ -9,117 +10,139 @@ interface CameraScannerProps {
 
 export const CameraScanner: React.FC<CameraScannerProps> = ({
   onBarcodeScanned,
-  onClose
+  onClose,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const scannerRef = useRef<BarcodeScanner>();
-  const [isScanning, setIsScanning] = useState(false);
-  const [cameraError, setCameraError] = useState<string>('');
-  const scanIntervalRef = useRef<number>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const readerRef = useRef<BrowserMultiFormatReader | null>(null);
+  const requestRef = useRef<number | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
-  useEffect(() => {
-    scannerRef.current = new BarcodeScanner();
-    startCamera();
-    
-    return () => {
-      stopCamera();
-    };
-  }, []);
+  const tick = useCallback(() => {
+    if (!videoRef.current || !canvasRef.current || !readerRef.current) return;
 
-  const startCamera = async () => {
-    try {
-      setCameraError('');
-      setIsScanning(true);
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-      if (videoRef.current && scannerRef.current) {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-          video: { facingMode: 'environment' } 
-        });
-        
-        videoRef.current.srcObject = stream;
-        startPeriodicScanning();
-      }
-    } catch (err) {
-      setCameraError('Не удалось запустить камеру');
-      setIsScanning(false);
-    }
-  };
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      canvas.width = video.videoWidth || video.clientWidth;
+      canvas.height = video.videoHeight || video.clientHeight;
 
-  const startPeriodicScanning = () => {
-    if (!videoRef.current || !scannerRef.current) return;
-
-    if (scanIntervalRef.current) {
-      clearInterval(scanIntervalRef.current);
-    }
-
-    scanIntervalRef.current = window.setInterval(async () => {
-      if (!isScanning || !videoRef.current) return;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       try {
-        const results = await scannerRef.current!.scanFromVideo(videoRef.current);
-        if (results.length > 0) {
-          onBarcodeScanned(results[0]);
+        const result = readerRef.current.decodeFromCanvas(canvas);
+        if (result) {
+          onBarcodeScanned(result.getText());
+          onClose(); // автоматически закрываем после успеха
+          return;
         }
-      } catch (error) {
-        // Игнорируем ошибки сканирования
+      } catch (err: any) {
+        // NotFoundException — это нормально, просто нет штрихкода в кадре
+        if (err.name !== 'NotFoundException') {
+          console.warn('ZXing ошибка:', err);
+        }
       }
-    }, 300); // Оптимальная частота для мобильных
-  };
+    }
 
-  const stopCamera = () => {
-    if (scanIntervalRef.current) {
-      clearInterval(scanIntervalRef.current);
-    }
-    
-    if (videoRef.current?.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
-      videoRef.current.srcObject = null;
-    }
-    setIsScanning(false);
-  };
+    requestRef.current = requestAnimationFrame(tick);
+  }, [onBarcodeScanned, onClose]);
+
+  useEffect(() => {
+    const startScanning = async () => {
+      try {
+        readerRef.current = new BrowserMultiFormatReader();
+
+        // Ускоряем распознавание (опционально, но очень помогает)
+        const hints = new Map();
+        hints.set(5 /* DecodeHintType.TRY_HARDER */, true);
+        hints.set(1 /* DecodeHintType.POSSIBLE_FORMATS */, [
+          // Добавь только нужные форматы — быстрее
+          'EAN_13', 'EAN_8', 'CODE_128', 'CODE_39', 'QR_CODE', 'DATA_MATRIX'
+        ]);
+        readerRef.current.hints = hints;
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+        });
+
+        streamRef.current = stream;
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.setAttribute('playsinline', 'true');
+          await videoRef.current.play();
+
+          // Запускаем цикл сканирования после первого кадра
+          requestRef.current = requestAnimationFrame(tick);
+        }
+      } catch (err: any) {
+        console.error('Ошибка доступа к камере:', err);
+        alert(`Не удалось открыть камеру: ${err.message || err}`);
+      }
+    };
+
+    startScanning();
+
+    // Очистка при размонтировании
+    return () => {
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+
+      // В новых версиях reset() нет → просто пересоздаём reader
+      readerRef.current = null;
+
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+    };
+  }, [tick]);
 
   const handleClose = () => {
-    stopCamera();
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    readerRef.current = null;
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop());
+    }
     onClose();
   };
 
   return (
-    <div className={styles.cameraOverlay}>
-      <div className={styles.cameraContainer}>
+    <div className={styles.cameraOverlay} onClick={handleClose}>
+      <div className={styles.cameraContainer} onClick={e => e.stopPropagation()}>
         <div className={styles.cameraHeader}>
-          <h3>Сканирование штрих-кода</h3>
-          <button 
-            className={styles.closeButton}
-            onClick={handleClose}
-          >
-            ×
-          </button>
+          <h3>Наведите на штрих-код</h3>
+          <button className={styles.closeButton} onClick={handleClose}>×</button>
         </div>
 
-        {/* Компактная область предпросмотра как в оригинале */}
         <div className={styles.cameraPreview}>
-          <video 
-            ref={videoRef} 
+          <video
+            ref={videoRef}
             className={styles.videoElement}
-            autoPlay
             playsInline
             muted
+            autoPlay
           />
-          <div className={styles.scanFrame}></div>
+          <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+          <div className={styles.scanFrame}>
+            <div className={styles.cornerTopLeft}></div>
+            <div className={styles.cornerTopRight}></div>
+            <div className={styles.cornerBottomLeft}></div>
+            <div className={styles.cornerBottomRight}></div>
+          </div>
         </div>
 
-        {cameraError && (
-          <div className={styles.errorMessage}>
-            {cameraError}
-          </div>
-        )}
-
         <div className={styles.cameraControls}>
-          <button 
-            className={styles.controlButton}
-            onClick={handleClose}
-          >
+          <button className={styles.controlButton} onClick={handleClose}>
             Закрыть
           </button>
         </div>
