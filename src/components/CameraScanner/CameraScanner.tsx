@@ -44,14 +44,56 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   };
 
   useEffect(() => {
+    const workerScript = `
+      import { MultiFormatReader, DecodeHintType, RGBLuminanceSource, BinaryBitmap, HybridBinarizer } from 'https://cdn.jsdelivr.net/npm/@zxing/library@0.21.0/+esm';
+
+      const readerCache = new Map();
+
+      self.onmessage = (e) => {
+        const { buffer, width, height, formats, jobId } = e.data;
+
+        const pixels = new Uint8ClampedArray(new Uint8Array(buffer));
+        const luminanceSource = new RGBLuminanceSource(pixels, width, height);
+        const binaryBitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
+
+        const key = formats.join(',');
+        let reader = readerCache.get(key);
+        if (!reader) {
+          reader = new MultiFormatReader();
+          const hints = new Map();
+          hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
+          hints.set(DecodeHintType.TRY_HARDER, true);
+          reader.setHints(hints);
+          readerCache.set(key, reader);
+        }
+
+        try {
+          const result = reader.decode(binaryBitmap);
+          self.postMessage({
+            success: true,
+            text: result.getText(),
+            format: result.getBarcodeFormat(),
+            jobId
+          });
+        } catch (err) {
+          self.postMessage({ success: false, jobId });
+        }
+      };
+    `;
+
+    const blob = new Blob([workerScript], { type: 'application/javascript' });
+    const workerUrl = URL.createObjectURL(blob);
+
     for (let i = 0; i < MAX_WORKERS; i++) {
-      const worker = new Worker(new URL('../../workers/barcodeWorker.ts', import.meta.url), {
-        type: 'module',
-      });
-      workersRef.current.push(worker);
+      workersRef.current.push(new Worker(workerUrl));
     }
-    return () => workersRef.current.forEach(w => w.terminate());
+
+    return () => {
+      workersRef.current.forEach(w => w.terminate());
+      URL.revokeObjectURL(workerUrl);
+    };
   }, []);
+  // ←←← КОНЕЦ ИЗМЕНЕНИЯ
 
   const captureAndDispatch = useCallback(() => {
     if (isBlocked || !videoRef.current || !canvasRef.current) return;
@@ -78,10 +120,8 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       if (!worker) return;
 
       const handler = (e: MessageEvent) => {
-        // Игнорируем всё, что не от текущего jobId
         if (e.data.jobId !== jobId) return;
 
-        // Отладочные логи
         if (e.data.type === 'debug') {
           console.log('Worker log:', e.data.text);
           return;
@@ -90,8 +130,6 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
         if (e.data.success && !resolved) {
           resolved = true;
           activeJobRef.current = null;
-
-          // Сразу снимаем handler у всех воркеров — больше никаких зомби!
           workersRef.current.forEach(w => w.removeEventListener('message', handler));
 
           const formatName = e.data.format.toString().replace('FORMAT_', '').replace('_', '-');
@@ -158,7 +196,6 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   };
 
   return (
-    // твой JSX без изменений
     <div className={styles.cameraOverlay}>
       <div className={styles.cameraContainer}>
         <div className={styles.cameraHeader}>
