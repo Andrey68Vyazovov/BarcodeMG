@@ -108,6 +108,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       };
 
       worker.addEventListener('message', handler);
+      console.log('Отправляем кадр в воркеры, jobId:', jobId);
       worker.postMessage(
         {
           buffer: imageData.data.buffer,
