@@ -60,7 +60,7 @@
     font-weight: 600;
     width: 50px;
     height: 50px;
-    background: #dedddf url('./images/send.svg') no-repeat center / cover; // Тот же цвет
+    background: #dedddf url('/images/send.svg') no-repeat center / cover; // Тот же цвет
     background-size: 65%;
     font-size: 11px;
     box-shadow: 3px 3px 5px 0 #777386;
@@ -75,7 +75,7 @@
     }
 
     &:disabled {
-      background: #fdfbff url('./images/send.svg') no-repeat center / cover;
+      background: #fdfbff url('/images/send.svg') no-repeat center / cover;
       background-size: 65%;
       box-shadow: none;
       opacity: 0.4;

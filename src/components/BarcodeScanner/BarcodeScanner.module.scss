@@ -65,7 +65,7 @@
       width: 40px; // Увеличили кнопки
       height: 40px;
       border-radius: 6px;
-      background: #dedddf url('./images/photo-camera.svg') no-repeat center / cover;
+      background: #dedddf url('/images/photo-camera.svg') no-repeat center / cover;
       background-size: 65%;
       box-shadow: 2px 2px 4px 0 #777386;
       transition: all 0.2s ease;
@@ -85,7 +85,7 @@
       width: 40px;
       height: 40px;
       border-radius: 6px;
-      background: #dedddf url('./images/pencil.svg') no-repeat center / cover;
+      background: #dedddf url('/images/pencil.svg') no-repeat center / cover;
       background-size: 65%;
       box-shadow: 2px 2px 4px 0 #777386;
       transition: all 0.2s ease;
@@ -96,7 +96,7 @@
       }
 
       &.manualActive {
-        background: #dedddf url('./images/pen-slash.svg') no-repeat center / cover;
+        background: #dedddf url('/images/pen-slash.svg') no-repeat center / cover;
         background-size: 65%;
       }
     }
@@ -105,7 +105,7 @@
       width: 40px;
       height: 40px;
       border-radius: 6px;
-      background: #dedddf url('./images/check.svg') no-repeat center / cover;
+      background: #dedddf url('/images/check.svg') no-repeat center / cover;
       background-size: 65%;
       box-shadow: 2px 2px 4px 0 #777386;
       position: relative;
