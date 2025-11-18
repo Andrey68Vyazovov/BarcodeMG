@@ -345,6 +345,21 @@ h3 {
     margin-bottom: 10px;
 }
 
+.manual-active {
+    background: #dedddf url('./images/pen-slash.svg') no-repeat center / cover !important;
+    background-size: 80% !important;
+}
+
+.popup__button-11.manual-active {
+    z-index: 10 !important;
+    position: relative !important;
+}
+
+.popup__button-7:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 
 
 

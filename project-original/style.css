@@ -1,0 +1,345 @@
+.page {
+  width: 100%;
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-form {
+  margin: 0;
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 100%;
+  max-height: 500px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 auto;
+  border: 2px solid red;
+  background-color: aqua;
+
+}
+
+.form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px auto;
+  gap: 20px;
+}
+
+.form__div_1 {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+  align-items: center;
+}
+
+.input_1 {
+  position: relative;
+  top: 1px;
+}
+
+.form_2 {
+  
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px auto;
+  gap: 20px;
+}
+
+.form1 {
+  display: flex;
+}
+
+.form2 {
+  display: flex;
+}
+
+.form_none {
+  display: none;
+}
+
+.mail {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: absolute;
+  bottom: 15px;
+  left: 15px; 
+  margin: 0;
+  padding: 0;  
+}
+
+.mail-form
+{
+  display: flex;
+  width: 90%;
+}
+
+.mail-form-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.select_1 {
+  width: 90%;
+  border-radius: 3px;
+}
+
+.select_1:focus {
+  border: 1.5px solid black;
+}
+
+.popup__close {
+  position: absolute;
+  bottom: 0;
+  right: 30px;
+  margin: 0;
+  border: 2px solid black;
+  border-radius: 40%;
+  font-weight: 600;
+  width: 55px;
+  height: 55px;
+  background: #dedddf url('./images/send.svg') no-repeat center / cover;
+  background-size: 80%;
+  font-size: 11px;
+  box-shadow: 5px 5px 6px 0 #777386;
+}
+
+.popup__close:disabled {
+  background: #fdfbff url('./images/send.svg') no-repeat center / cover;
+  background-size: 80%;
+  box-shadow: none;
+  opacity: 0.4;
+}
+
+.error-email {
+  border: 1.5px solid red;
+  background-color: #fac1bf;
+  box-shadow: inset 2px 2px 5px white;
+}
+
+.popup {
+  font-family: "Inter", Arial, sans-serif;
+  display: flex;
+  visibility: hidden;
+  opacity: 0;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
+  transition:
+    visibility 0.3s,
+    opacity 0.6s;
+}
+
+.popup__visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup__content {
+  max-width: 250px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+  box-sizing: border-box;
+  padding: 34px 36px;
+}
+
+.popup_type_photo {
+  display: flex;
+  flex-direction: column;
+}
+
+.popup__content_2 {
+  width: 95%;
+  height: 70%;
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+  box-sizing: border-box;
+  padding: 10px 10px;
+}
+
+.popup__close-5 {
+  width: 25px;
+  height: 25px;
+  background: transparent url('./images/close.svg') center no-repeat;
+  background-size: 30px 30px;
+  border: none;
+  position: absolute;
+  top: -25px;
+  right: -25px;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+  transition:
+    visibility 0s,
+    opacity 0.3s;
+  /*Транзишн пора бы уже знать*/
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.popup__close-5:hover {
+  opacity: 0.6;
+}
+
+.popup__title {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.message {
+  margin-bottom: 0;
+} 
+
+.popup__button-5 {
+  width: 100%;
+  height: 50px;
+  font-size: 18px;
+  line-height: 22px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  border-radius: 9px;
+  border: none;
+  transition:
+    visibility 0s,
+    background 0.3s;
+  margin-top: 30px;
+}
+
+.popup__button-5:hover {
+  background: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+}
+
+.popup__button_disabled {
+  pointer-events: none;
+  background-color: #fff;
+  color: #c4c4c4;
+  border: solid 1px #c4c4c4;
+}
+
+.popup__button-7 {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  background: #dedddf url('./images/photo-camera.svg') no-repeat center / cover;
+  background-size: 80%;
+  box-shadow: 2px 2px 3px 0 #777386;
+}
+
+.popup__button-10 {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  background: #dedddf url('./images/pencil.svg') no-repeat center / cover;
+  background-size: 80%;
+  box-shadow: 2px 2px 3px 0 #777386;
+}
+
+.popup__button-11 {
+  position: absolute;
+  z-index: -10;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  background: #dedddf url('./images/check.svg') no-repeat center / cover;
+  background-size: 80%;
+  box-shadow: 2px 2px 3px 0 #777386;
+}
+
+.button_reload {
+  position: absolute;
+  border-radius: 50%;
+  font-weight: 800;
+  top: 15px;
+  left: 15px;
+  width: 50px;
+  height: 50px;
+  box-shadow: 5px 5px 6px 0 #777386;
+}
+
+.svg_img {
+width: 100%;
+height: 100%;
+transform: rotate(0deg);
+transition-duration: .3s;
+}
+
+.svg_img_rotate {
+  transform: rotate(180deg);
+  transition-duration: .3s;
+}
+
+.button_toggle {
+  position: absolute;
+  border-radius: 50%;
+  font-weight: 800;
+  top: 15px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  box-shadow: 5px 5px 6px 0 #777386;
+}
+
+.svg_toggle {
+  width: 100%;
+  height: 100%;
+  transform: rotate(0deg);
+  transition-duration: .4s;
+ }
+
+.svg_toggle_rotate {
+  transform: rotate(180deg);
+  transition-duration: .4s;
+}  
+
+.version {
+  position: absolute;
+  bottom: 15px;
+  right: 15px; 
+  margin: 0;
+  font-size: small;
+}
+
+
+h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.title {
+ position: absolute;
+ top: 32px;
+}
+
+.select {
+  margin-bottom: 10px;
+}
