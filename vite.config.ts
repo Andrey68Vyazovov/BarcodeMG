@@ -3,12 +3,18 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/BarcodeMG/', // Имя вашего репозитория на GitHub
+  base: '/BarcodeMG/',
   server: {
     port: 3000
   },
   build: {
     outDir: 'dist',
-    emptyOutDir: true
-  }
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: './index.html'
+      }
+    }
+  },
+  publicDir: 'public'
 })
