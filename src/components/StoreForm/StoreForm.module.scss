@@ -1,0 +1,24 @@
+.form2 {
+  display: flex;
+}
+
+.form_2 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px auto;
+  gap: 20px;
+}
+
+// .input {
+//   &_2, &_3 {
+//     // Общие стили для инпутов
+//   }
+// }
+
+// .counter_2 {
+//   // Стили для счетчика формы 2
+// }
