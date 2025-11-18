@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useCallback } from "react"
 import { ControlButtons } from "./components/ControlButtons"
 import { EmailForm } from "./components/EmailForm"
 import { Title } from "./components/Title"
@@ -7,146 +7,118 @@ import { StoreForm } from "./components/StoreForm"
 import styles from './styles/styles.module.scss'
 import { Footer } from "./components/Footer"
 import { PopupConfirm } from "./components/PopupConfirm"
-import { CONSTANTS } from "./constants" // Импортируем константы
+import { CONSTANTS } from "./constants"
+import { useBarcodes } from "./hooks/useBarcodes"
+import { useConfirmPopup } from "./hooks/useConfirmPopup"
+import { useForms } from "./hooks/useForms"
+import { generateEmailData, sendEmail } from "./utils/emailUtils"
+import { isValidBarcode, canSendEmail } from "./utils/validationUtils"
 
 export function App() {
-  const [currentForm, setCurrentForm] = useState<'form1' | 'form2'>('form1')
-  const [barcodes, setBarcodes] = useState<string[]>([])
-  const [email, setEmail] = useState('')
-  const [storeNumber, setStoreNumber] = useState('')
-  const [isManualInput, setIsManualInput] = useState(false)
-  const [barcodeInput, setBarcodeInput] = useState('')
-  const [barcodeInput2, setBarcodeInput2] = useState('')
+  const { barcodes, addBarcode, clearBarcodes, getBarcodesCount } = useBarcodes();
+  const { 
+    isConfirmOpen, 
+    confirmMessage, 
+    showConfirm, 
+    hideConfirm, 
+    executeConfirm, 
+    shouldShowConfirm 
+  } = useConfirmPopup();
   
-  // Состояния для попапа
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-  const [confirmMessage, setConfirmMessage] = useState('')
-  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null)
-
-  const toggleForm = useCallback(() => {
-    if (barcodes.length >= CONSTANTS.BARCODE_LIMIT_FOR_CONFIRM) {
-      setConfirmMessage(`есть отсканированные ШК: ${barcodes.length}`)
-      setPendingAction(() => () => {
-        setCurrentForm(prev => prev === 'form1' ? 'form2' : 'form1')
-        setBarcodes([])
-        setBarcodeInput('')
-        setBarcodeInput2('')
-        setStoreNumber('')
-      })
-      setIsConfirmOpen(true)
-    } else {
-      setCurrentForm(prev => prev === 'form1' ? 'form2' : 'form1')
-      setBarcodes([])
-      setBarcodeInput('')
-      setBarcodeInput2('')
-      setStoreNumber('')
-    }
-  }, [barcodes.length])
-
-  const toggleManualInput = useCallback(() => {
-    setIsManualInput(prev => !prev)
-  }, [])
+  const {
+    currentForm,
+    email,
+    storeNumber,
+    isManualInput,
+    barcodeInput,
+    barcodeInput2,
+    setEmail,
+    setStoreNumber,
+    setBarcodeInput,
+    setBarcodeInput2,
+    toggleForm,
+    toggleManualInput,
+    clearFormData,
+    clearBarcodeInputs
+  } = useForms();
 
   // Обработчик для формы 1
   const handleBarcodeInput1 = useCallback((value: string) => {
-    setBarcodeInput(value)
+    setBarcodeInput(value);
     
-    // Автоматическое добавление при сканировании
-    if (!isManualInput && value.length >= 7) {
-      const now = new Date()
-      const timestamp = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
-      const barcodeData = `${value.split(' ')[0]}$${timestamp}`
-      
-      setBarcodes(prev => [...prev, barcodeData])
-      setBarcodeInput('')
+    if (!isManualInput && isValidBarcode(value)) {
+      addBarcode(value, true);
+      setBarcodeInput('');
     }
-  }, [isManualInput])
+  }, [isManualInput, addBarcode, setBarcodeInput]);
 
   // Обработчик для формы 2
   const handleBarcodeInput2 = useCallback((value: string) => {
-    setBarcodeInput2(value)
+    setBarcodeInput2(value);
     
-    // Автоматическое добавление при сканировании
-    if (value.length >= 7) {
-      setBarcodes(prev => [...prev, value])
-      setBarcodeInput2('')
+    if (isValidBarcode(value)) {
+      addBarcode(value, false);
+      setBarcodeInput2('');
     }
-  }, [])
+  }, [addBarcode, setBarcodeInput2]);
 
-  // Обработчик ручного ввода (кнопка проверки)
+  // Обработчик ручного ввода
   const handleManualSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault()
-    if (barcodeInput.length >= 7) {
-      const now = new Date()
-      const timestamp = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
-      const barcodeData = `${barcodeInput.split(' ')[0]}$${timestamp}`
-      
-      setBarcodes(prev => [...prev, barcodeData])
-      setBarcodeInput('')
+    e.preventDefault();
+    if (isValidBarcode(barcodeInput)) {
+      addBarcode(barcodeInput, true);
+      setBarcodeInput('');
     }
-  }, [barcodeInput])
+  }, [barcodeInput, addBarcode, setBarcodeInput]);
 
   // Обработчик перезагрузки
   const handleReload = useCallback(() => {
-    if (barcodes.length >= CONSTANTS.BARCODE_LIMIT_FOR_CONFIRM) {
-      setConfirmMessage(`есть отсканированные ШК: ${barcodes.length}`)
-      setPendingAction(() => () => {
-        setBarcodes([])
-        setBarcodeInput('')
-        setBarcodeInput2('')
-        setStoreNumber('')
-        setEmail('')
-        window.location.reload()
-      })
-      setIsConfirmOpen(true)
+    if (shouldShowConfirm(getBarcodesCount())) {
+      showConfirm(`есть отсканированные ШК: ${getBarcodesCount()}`, () => {
+        clearBarcodes();
+        clearFormData();
+        window.location.reload();
+      });
     } else {
-      window.location.reload()
+      window.location.reload();
     }
-  }, [barcodes.length])
+  }, [shouldShowConfirm, getBarcodesCount, showConfirm, clearBarcodes, clearFormData]);
 
-  // Обработчик подтверждения в попапе
-  const handleConfirm = useCallback(() => {
-    if (pendingAction) {
-      pendingAction()
+  // Обработчик переключения формы
+  const handleToggleForm = useCallback(() => {
+    if (shouldShowConfirm(getBarcodesCount())) {
+      showConfirm(`есть отсканированные ШК: ${getBarcodesCount()}`, () => {
+        toggleForm();
+        clearBarcodes();
+        clearBarcodeInputs();
+        setStoreNumber('');
+      });
+    } else {
+      toggleForm();
+      clearBarcodes();
+      clearBarcodeInputs();
+      setStoreNumber('');
     }
-    setIsConfirmOpen(false)
-    setPendingAction(null)
-  }, [pendingAction])
-
-  // Обработчик закрытия попапа
-  const handleClosePopup = useCallback(() => {
-    setIsConfirmOpen(false)
-    setPendingAction(null)
-  }, [])
+  }, [shouldShowConfirm, getBarcodesCount, showConfirm, toggleForm, clearBarcodes, clearBarcodeInputs, setStoreNumber]);
 
   // Обработчик отправки email
   const handleSendEmail = useCallback((e: React.FormEvent) => {
-    e.preventDefault()
-    if (email && barcodes.length > 0) {
-      const now = new Date()
-      const dateStr = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+    e.preventDefault();
+    if (canSendEmail(email, getBarcodesCount())) {
+      const { subject, body } = generateEmailData(barcodes, currentForm, storeNumber);
+      sendEmail(email, subject, body);
       
-      const subject = currentForm === 'form1' 
-        ? `transit-barcode: ${dateStr}`
-        : `barcode(${storeNumber}) : ${dateStr}`
-      
-      const body = barcodes.join('%0D%0A')
-      
-      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`
-      
-      // Очищаем после отправки
-      setBarcodes([])
-      setEmail('')
-      setStoreNumber('')
+      clearBarcodes();
+      setEmail('');
+      setStoreNumber('');
     }
-  }, [email, barcodes, currentForm, storeNumber])
+  }, [email, getBarcodesCount, barcodes, currentForm, storeNumber, clearBarcodes, setEmail, setStoreNumber]);
 
   const handleOpenCamera = useCallback(() => {
-    // Здесь будет логика открытия камеры
-    console.log('Открываем камеру')
-  }, [])
+    console.log('Открываем камеру');
+  }, []);
 
-  const isSendDisabled = !email || barcodes.length === 0
+  const isSendDisabled = !canSendEmail(email, getBarcodesCount());
 
   return (
     <div className={styles.page}>
@@ -154,7 +126,7 @@ export function App() {
         <div className={styles.mainForm}>
           <ControlButtons 
             onReload={handleReload}
-            onToggleForm={toggleForm}
+            onToggleForm={handleToggleForm}
           />
 
           <EmailForm 
@@ -169,7 +141,7 @@ export function App() {
           {currentForm === 'form1' ? (
             <BarcodeScanner 
               barcodeInput={barcodeInput}
-              barcodesCount={barcodes.length}
+              barcodesCount={getBarcodesCount()}
               isManualInput={isManualInput}
               onBarcodeChange={handleBarcodeInput1}
               onManualSubmit={handleManualSubmit}
@@ -180,7 +152,7 @@ export function App() {
             <StoreForm 
               storeNumber={storeNumber}
               barcodeInput2={barcodeInput2}
-              barcodesCount={barcodes.length}
+              barcodesCount={getBarcodesCount()}
               onStoreNumberChange={setStoreNumber}
               onBarcodeChange={handleBarcodeInput2}
             />
@@ -190,12 +162,11 @@ export function App() {
         <Footer version={CONSTANTS.VERSION} />
       </div>
 
-      {/* Добавляем попап подтверждения */}
       <PopupConfirm 
         isOpen={isConfirmOpen}
         message={confirmMessage}
-        onConfirm={handleConfirm}
-        onClose={handleClosePopup}
+        onConfirm={executeConfirm}
+        onClose={hideConfirm}
       />
     </div>
   )
