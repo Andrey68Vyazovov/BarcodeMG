@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { BrowserMultiFormatReader } from '@zxing/browser';
 import styles from './CameraScanner.module.scss';
-import beepSound from '@/public/sounds/beep.wav';
+import beepSound from '../../assets/sounds/beep.wav';
 
 interface CameraScannerProps {
   onBarcodeScanned: (barcode: string) => void;
