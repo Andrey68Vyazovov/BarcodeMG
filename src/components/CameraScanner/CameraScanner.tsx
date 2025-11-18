@@ -14,13 +14,14 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const scannerRef = useRef<BarcodeScanner>();
   const [isScanning, setIsScanning] = useState(false);
-  const [cameraError, setCameraError] = useState<string>(''); // Переименовал error
+  const [cameraError, setCameraError] = useState<string>('');
+  const scanIntervalRef = useRef<number>();
 
   useEffect(() => {
     scannerRef.current = new BarcodeScanner();
+    startCamera();
     
     return () => {
-      scannerRef.current?.stopScanning();
       stopCamera();
     };
   }, []);
@@ -40,35 +41,54 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
         });
         
         videoRef.current.srcObject = stream;
-        startPeriodicScanning();
+        
+        // Ждем пока видео начнет воспроизводиться
+        videoRef.current.onloadedmetadata = () => {
+          startPeriodicScanning();
+        };
       }
     } catch (err) {
       setCameraError('Не удалось запустить камеру. Проверьте разрешения.');
       console.error('Camera error:', err);
+      setIsScanning(false);
     }
   };
 
   const startPeriodicScanning = () => {
     if (!videoRef.current || !scannerRef.current) return;
 
-    const scanInterval = setInterval(async () => {
-      if (!isScanning) {
-        clearInterval(scanInterval);
+    // Очищаем предыдущий интервал
+    if (scanIntervalRef.current) {
+      clearInterval(scanIntervalRef.current);
+    }
+
+    scanIntervalRef.current = setInterval(async () => {
+      if (!isScanning || !videoRef.current) {
+        clearInterval(scanIntervalRef.current);
         return;
       }
 
       try {
-        const results = await scannerRef.current!.scanFromVideo(videoRef.current!);
-        if (results.length > 0) {
-          onBarcodeScanned(results[0]);
+        // Проверяем что видео готово
+        if (videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
+          const results = await scannerRef.current!.scanFromVideo(videoRef.current);
+          if (results.length > 0) {
+            console.log('Камера: найден штрих-код:', results[0]);
+            onBarcodeScanned(results[0]);
+            // Можно добавить звук успеха здесь
+          }
         }
       } catch (scanError) {
-        // Игнорируем ошибки сканирования
+        // Игнорируем ошибки сканирования (код не найден)
       }
-    }, 1000);
+    }, 500); // Увеличили частоту сканирования до 2 раз в секунду
   };
 
   const stopCamera = () => {
+    if (scanIntervalRef.current) {
+      clearInterval(scanIntervalRef.current);
+    }
+    
     if (videoRef.current?.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
       stream.getTracks().forEach(track => track.stop());
@@ -82,14 +102,13 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     onClose();
   };
 
-  // Автоматически запускаем камеру при открытии
-  useEffect(() => {
-    startCamera();
-    
-    return () => {
+  const toggleCamera = () => {
+    if (isScanning) {
       stopCamera();
-    };
-  }, []);
+    } else {
+      startCamera();
+    }
+  };
 
   return (
     <div className={styles.cameraOverlay}>
@@ -134,16 +153,16 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
         <div className={styles.cameraControls}>
           <button 
             className={`${styles.controlButton} ${isScanning ? styles.stop : styles.start}`}
-            onClick={isScanning ? stopCamera : startCamera} // Используем напрямую
+            onClick={toggleCamera}
           >
-            {isScanning ? '⏸️ Остановить' : '▶️ Запустить'}
+            {isScanning ? 'Остановить' : 'Сканировать'}
           </button>
           
           <button 
             className={styles.controlButton}
             onClick={handleClose}
           >
-            ✅ Готово
+            Готово
           </button>
         </div>
 

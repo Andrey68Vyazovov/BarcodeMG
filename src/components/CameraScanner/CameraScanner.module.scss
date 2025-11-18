@@ -89,8 +89,8 @@
 }
 
 .scanFrame {
-  width: 70%;
-  height: 40%;
+  width: 80%; // Увеличили на 10%
+  height: 50%; // Увеличили на 10%
   border: 2px solid rgba(255, 255, 255, 0.8);
   position: relative;
   border-radius: 12px;
@@ -137,7 +137,7 @@
 
 .scanLine {
   position: absolute;
-  width: 70%;
+  width: 80%; // Увеличили на 10%
   height: 2px;
   background: linear-gradient(90deg, transparent, #00ff88, transparent);
   animation: scan 2s linear infinite;
@@ -173,43 +173,45 @@
 
 .controlButton {
   padding: 12px 20px;
-  border: none;
+  border: 2px solid #555; // Такая же граница как на главной форме
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   min-width: 120px;
+  background: #dedddf; // Тот же цвет как на главной форме
   
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background: #d0ced1; // Тот же hover эффект
   }
   
   &.start {
-    background: #00b894;
-    color: white;
+    background: #dedddf url('/images/photo-camera.svg') no-repeat center / 65%; // Та же иконка
+    color: transparent; // Скрываем текст
     
     &:hover {
-      background: #00a085;
+      background-color: #d0ced1;
     }
   }
   
   &.stop {
-    background: #e17055;
-    color: white;
+    background: #dedddf url('/images/refresh.svg') no-repeat center / 65%; // Иконка остановки
+    color: transparent;
     
     &:hover {
-      background: #d63031;
+      background-color: #d0ced1;
     }
   }
   
   &:not(.start):not(.stop) {
-    background: #3498db;
-    color: white;
+    background: #dedddf;
+    color: #333;
     
     &:hover {
-      background: #2980b9;
+      background: #d0ced1;
     }
   }
 }
