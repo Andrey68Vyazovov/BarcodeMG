@@ -1,115 +1,98 @@
-.debugInfo {
-  margin: 10px 0;
-  padding: 10px;
-  background: #f5f5f5;
-  border-radius: 8px;
-  font-size: 12px;
-}
-
-.debugStats {
+.cameraOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-  gap: 10px;
-  
-  span {
-    background: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-  }
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.debugLog {
-  border: 1px solid #ddd;
-  border-radius: 6px;
+.cameraContainer {
   background: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.debugHeader {
+.cameraHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
-  background: #e9ecef;
-  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
   
-  h4 {
+  h3 {
     margin: 0;
-    font-size: 12px;
-    color: #495057;
+    font-size: 18px;
   }
 }
 
-.clearLogButton {
+.closeButton {
   background: none;
   border: none;
+  font-size: 24px;
   cursor: pointer;
-  font-size: 14px;
-  padding: 2px 6px;
-  border-radius: 3px;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.cameraPreview {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.videoElement {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanFrame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 100px;
+  border: 2px solid #fff;
+  border-radius: 8px;
+}
+
+.errorMessage {
+  background: #fee;
+  color: #c33;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.cameraControls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.controlButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
   
   &:hover {
-    background: #dc3545;
-    color: white;
-  }
-}
-
-.logEntries {
-  max-height: 120px;
-  overflow-y: auto;
-  padding: 8px;
-}
-
-.logEntry {
-  font-family: 'Courier New', monospace;
-  font-size: 11px;
-  padding: 2px 4px;
-  margin: 2px 0;
-  border-radius: 3px;
-  word-break: break-all;
-  
-  &.success {
-    background: #d4edda;
-    color: #155724;
-    border-left: 3px solid #28a745;
-  }
-  
-  &.fail {
-    background: #fff3cd;
-    color: #856404;
-    border-left: 3px solid #ffc107;
-  }
-  
-  &.warning {
-    background: #e2e3e5;
-    color: #383d41;
-    border-left: 3px solid #6c757d;
-  }
-  
-  &.error {
-    background: #f8d7da;
-    color: #721c24;
-    border-left: 3px solid #dc3545;
-  }
-}
-
-.noLogs {
-  text-align: center;
-  color: #6c757d;
-  font-style: italic;
-  padding: 10px;
-}
-
-// Адаптивность для мобильных
-@media (max-width: 480px) {
-  .debugStats {
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  .logEntries {
-    max-height: 80px;
+    background: #0056b3;
   }
 }
