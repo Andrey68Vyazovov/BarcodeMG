@@ -4,17 +4,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/BarcodeMG/',
-  server: {
-    port: 3000
-  },
+  root: '.', // Корень проекта
+  publicDir: 'public', // Папка со статическими файлами
   build: {
     outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
-      input: {
-        main: './index.html'
-      }
+      input: './public/index.html' // Явно указываем путь к index.html
     }
-  },
-  publicDir: 'public'
+  }
 })
