@@ -6,7 +6,7 @@ export const CONSTANTS = {
 } as const;
 
 // === СКАНИРОВАНИЕ: частота и размеры ===
-export const SCAN_FPS = 15;                            // 15 кадров/сек — идеально при воркерах
+export const SCAN_FPS = 8;                            // 15 кадров/сек — идеально при воркерах
 export const SCAN_INTERVAL_MS = Math.round(1000 / SCAN_FPS); // 66–67 мс
 export const TARGET_VIDEO_WIDTH = 800;
 export const TARGET_VIDEO_HEIGHT = 600;
