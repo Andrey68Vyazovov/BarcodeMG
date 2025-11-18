@@ -7,7 +7,29 @@
     left: 15px;
     width: 50px;
     height: 50px;
-    box-shadow: 5px 5px 6px 0 #777386;
+    box-shadow: 4px 4px 6px 0 #777386;
+    border: 2px solid #555; // Добавим границу как у других кнопок
+    cursor: pointer;
+    background: #dedddf; // Тот же цвет что у других кнопок
+    transition: all 0.3s ease;
+    
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 5px 5px 8px 0 #777386;
+      background: #d0ced1;
+    }
+    
+    &:disabled {
+      cursor: not-allowed;
+      // Визуально не меняем, только поведение
+    }
+    
+    @media (max-width: 480px) {
+      width: 45px;
+      height: 45px;
+      top: 10px;
+      left: 10px;
+    }
   }
 
   &_toggle {
@@ -18,7 +40,29 @@
     right: 15px;
     width: 50px;
     height: 50px;
-    box-shadow: 5px 5px 6px 0 #777386;
+    box-shadow: 4px 4px 6px 0 #777386;
+    border: 2px solid #555; // Такая же граница
+    cursor: pointer;
+    background: #dedddf; // Тот же цвет
+    transition: all 0.3s ease;
+    
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 5px 5px 8px 0 #777386;
+      background: #d0ced1;
+    }
+    
+    &:disabled {
+      cursor: not-allowed;
+      // Визуально не меняем, только поведение
+    }
+    
+    @media (max-width: 480px) {
+      width: 45px;
+      height: 45px;
+      top: 10px;
+      right: 10px;
+    }
   }
 }
 

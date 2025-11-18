@@ -5,6 +5,9 @@ import { Title } from "./components/Title"
 import { BarcodeScanner } from "./components/BarcodeScanner"
 import { StoreForm } from "./components/StoreForm"
 import styles from './styles/styles.module.scss'
+import { Footer } from "./components/Footer"
+import { PopupConfirm } from "./components/PopupConfirm"
+import { CONSTANTS } from "./constants" // Импортируем константы
 
 export function App() {
   const [currentForm, setCurrentForm] = useState<'form1' | 'form2'>('form1')
@@ -14,14 +17,31 @@ export function App() {
   const [isManualInput, setIsManualInput] = useState(false)
   const [barcodeInput, setBarcodeInput] = useState('')
   const [barcodeInput2, setBarcodeInput2] = useState('')
+  
+  // Состояния для попапа
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [confirmMessage, setConfirmMessage] = useState('')
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null)
 
   const toggleForm = useCallback(() => {
-    setCurrentForm(prev => prev === 'form1' ? 'form2' : 'form1')
-    setBarcodes([])
-    setBarcodeInput('')
-    setBarcodeInput2('')
-    setStoreNumber('')
-  }, [])
+    if (barcodes.length >= CONSTANTS.BARCODE_LIMIT_FOR_CONFIRM) {
+      setConfirmMessage(`есть отсканированные ШК: ${barcodes.length}`)
+      setPendingAction(() => () => {
+        setCurrentForm(prev => prev === 'form1' ? 'form2' : 'form1')
+        setBarcodes([])
+        setBarcodeInput('')
+        setBarcodeInput2('')
+        setStoreNumber('')
+      })
+      setIsConfirmOpen(true)
+    } else {
+      setCurrentForm(prev => prev === 'form1' ? 'form2' : 'form1')
+      setBarcodes([])
+      setBarcodeInput('')
+      setBarcodeInput2('')
+      setStoreNumber('')
+    }
+  }, [barcodes.length])
 
   const toggleManualInput = useCallback(() => {
     setIsManualInput(prev => !prev)
@@ -68,13 +88,36 @@ export function App() {
 
   // Обработчик перезагрузки
   const handleReload = useCallback(() => {
-    if (barcodes.length >= 5) {
-      // Здесь будет логика попапа подтверждения
-      console.log('Показываем попап подтверждения')
+    if (barcodes.length >= CONSTANTS.BARCODE_LIMIT_FOR_CONFIRM) {
+      setConfirmMessage(`есть отсканированные ШК: ${barcodes.length}`)
+      setPendingAction(() => () => {
+        setBarcodes([])
+        setBarcodeInput('')
+        setBarcodeInput2('')
+        setStoreNumber('')
+        setEmail('')
+        window.location.reload()
+      })
+      setIsConfirmOpen(true)
     } else {
       window.location.reload()
     }
   }, [barcodes.length])
+
+  // Обработчик подтверждения в попапе
+  const handleConfirm = useCallback(() => {
+    if (pendingAction) {
+      pendingAction()
+    }
+    setIsConfirmOpen(false)
+    setPendingAction(null)
+  }, [pendingAction])
+
+  // Обработчик закрытия попапа
+  const handleClosePopup = useCallback(() => {
+    setIsConfirmOpen(false)
+    setPendingAction(null)
+  }, [])
 
   // Обработчик отправки email
   const handleSendEmail = useCallback((e: React.FormEvent) => {
@@ -107,43 +150,53 @@ export function App() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.mainForm}>
-        <ControlButtons 
-          onReload={handleReload}
-          onToggleForm={toggleForm}
-        />
-
-        <EmailForm 
-          email={email}
-          isSendDisabled={isSendDisabled}
-          onEmailChange={setEmail}
-          onSendEmail={handleSendEmail}
-        />
-
-        <Title currentForm={currentForm} />
-
-        {currentForm === 'form1' ? (
-          <BarcodeScanner 
-            barcodeInput={barcodeInput}
-            barcodesCount={barcodes.length}
-            isManualInput={isManualInput}
-            onBarcodeChange={handleBarcodeInput1}
-            onManualSubmit={handleManualSubmit}
-            onToggleManualInput={toggleManualInput}
-            onOpenCamera={handleOpenCamera}
+      <div className={styles.mainContainer}>
+        <div className={styles.mainForm}>
+          <ControlButtons 
+            onReload={handleReload}
+            onToggleForm={toggleForm}
           />
-        ) : (
-          <StoreForm 
-            storeNumber={storeNumber}
-            barcodeInput2={barcodeInput2}
-            barcodesCount={barcodes.length}
-            onStoreNumberChange={setStoreNumber}
-            onBarcodeChange={handleBarcodeInput2}
-          />
-        )}
 
-        <p className={styles.version}>v2.0 react</p>
+          <EmailForm 
+            email={email}
+            isSendDisabled={isSendDisabled}
+            onEmailChange={setEmail}
+            onSendEmail={handleSendEmail}
+          />
+
+          <Title currentForm={currentForm} />
+
+          {currentForm === 'form1' ? (
+            <BarcodeScanner 
+              barcodeInput={barcodeInput}
+              barcodesCount={barcodes.length}
+              isManualInput={isManualInput}
+              onBarcodeChange={handleBarcodeInput1}
+              onManualSubmit={handleManualSubmit}
+              onToggleManualInput={toggleManualInput}
+              onOpenCamera={handleOpenCamera}
+            />
+          ) : (
+            <StoreForm 
+              storeNumber={storeNumber}
+              barcodeInput2={barcodeInput2}
+              barcodesCount={barcodes.length}
+              onStoreNumberChange={setStoreNumber}
+              onBarcodeChange={handleBarcodeInput2}
+            />
+          )}
+        </div>
+        
+        <Footer version={CONSTANTS.VERSION} />
       </div>
+
+      {/* Добавляем попап подтверждения */}
+      <PopupConfirm 
+        isOpen={isConfirmOpen}
+        message={confirmMessage}
+        onConfirm={handleConfirm}
+        onClose={handleClosePopup}
+      />
     </div>
   )
 }
