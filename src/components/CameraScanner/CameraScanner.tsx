@@ -108,7 +108,16 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       };
 
       worker.addEventListener('message', handler);
-      worker.postMessage({ imageData, formats, jobId });
+      worker.postMessage(
+        {
+          buffer: imageData.data.buffer,
+          width: canvas.width,
+          height: canvas.height,
+          formats,
+          jobId,
+        },
+        [imageData.data.buffer]
+      );
     });
   }, [isBlocked, onBarcodeScanned]);
 
