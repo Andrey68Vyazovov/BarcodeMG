@@ -1,5 +1,7 @@
 .form2 {
   display: flex;
+  width: 100%;
+  height: 100%;
 }
 
 .form_2 {
@@ -9,16 +11,79 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 100px auto;
+  padding: 20px;
   gap: 20px;
+  box-sizing: border-box;
 }
 
-// .input {
-//   &_2, &_3 {
-//     // Общие стили для инпутов
-//   }
-// }
+.input {
+  &_2, &_3 {
+    width: 100%;
+    max-width: 280px; // Увеличили на ~20%
+    height: 40px;
+    padding: 0 12px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+    
+    &::placeholder {
+      color: #999;
+      font-size: 14px;
+    }
+  }
+}
 
-// .counter_2 {
-//   // Стили для счетчика формы 2
-// }
+.counter_2 {
+  font-size: 16px;
+  color: #333;
+  margin-top: 15px;
+  font-weight: 500;
+}
+
+// Адаптивность для мобильных
+@media (max-width: 480px) {
+  .input {
+    &_2, &_3 {
+      max-width: 320px;
+      height: 44px;
+      font-size: 18px;
+      
+      &::placeholder {
+        font-size: 16px;
+      }
+    }
+  }
+  
+  .counter_2 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .input {
+    &_2, &_3 {
+      max-width: 260px;
+      height: 42px;
+      font-size: 16px;
+      
+      &::placeholder {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Для очень больших экранов
+@media (min-width: 768px) {
+  .input {
+    &_2, &_3 {
+      max-width: 320px;
+    }
+  }
+}

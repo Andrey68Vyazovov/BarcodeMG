@@ -1,5 +1,7 @@
 .form1 {
   display: flex;
+  width: 100%;
+  height: 100%;
 }
 
 .form {
@@ -9,38 +11,69 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 100px auto;
+  padding: 20px;
   gap: 20px;
+  box-sizing: border-box;
 }
 
 .form_div_1 {
   display: flex;
-  gap: 7px;
+  gap: 10px; // Увеличили gap
   justify-content: center;
   align-items: center;
+  width: 100%;
+  max-width: 320px; // Увеличили максимальную ширину
 }
 
 .input_1 {
   position: relative;
   top: 1px;
+  width: 100%;
+  max-width: 240px; // Увеличили на ~20% (было 200px)
+  height: 40px; // Увеличили высоту
+  padding: 0 12px;
+  border: 2px solid #ccc; // Увеличили толщину границы
+  border-radius: 6px;
+  font-size: 16px; // Увеличили шрифт для лучшей читаемости
+  
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+  
+  &::placeholder {
+    color: #999;
+    font-size: 14px;
+  }
 }
 
-// .counter {
-//   // Стили для счетчика
-// }
+.counter {
+  font-size: 16px; // Увеличили шрифт счетчика
+  color: #333;
+  margin-top: 15px;
+  font-weight: 500;
+}
 
 .button {
   border: none;
   cursor: pointer;
+  flex-shrink: 0;
 
   &.popup {
     &__button_7 {
-      width: 30px;
-      height: 30px;
-      border-radius: 5px;
+      width: 40px; // Увеличили кнопки
+      height: 40px;
+      border-radius: 6px;
       background: #dedddf url('./images/photo-camera.svg') no-repeat center / cover;
-      background-size: 80%;
-      box-shadow: 2px 2px 3px 0 #777386;
+      background-size: 65%;
+      box-shadow: 2px 2px 4px 0 #777386;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        transform: scale(1.05);
+        box-shadow: 3px 3px 6px 0 #777386;
+      }
 
       &:disabled {
         opacity: 0.5;
@@ -49,33 +82,112 @@
     }
 
     &__button_10 {
-      width: 30px;
-      height: 30px;
-      border-radius: 5px;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
       background: #dedddf url('./images/pencil.svg') no-repeat center / cover;
-      background-size: 80%;
-      box-shadow: 2px 2px 3px 0 #777386;
+      background-size: 65%;
+      box-shadow: 2px 2px 4px 0 #777386;
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 3px 3px 6px 0 #777386;
+      }
 
       &.manualActive {
         background: #dedddf url('./images/pen-slash.svg') no-repeat center / cover;
-        background-size: 80%;
+        background-size: 65%;
       }
     }
 
     &__button_11 {
-      position: absolute;
-      z-index: -10;
-      width: 30px;
-      height: 30px;
-      border-radius: 5px;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
       background: #dedddf url('./images/check.svg') no-repeat center / cover;
-      background-size: 80%;
-      box-shadow: 2px 2px 3px 0 #777386;
+      background-size: 65%;
+      box-shadow: 2px 2px 4px 0 #777386;
+      position: relative;
+      z-index: 1;
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 3px 3px 6px 0 #777386;
+      }
 
       &.manualActive {
         z-index: 10;
         position: relative;
       }
     }
+  }
+}
+
+// Адаптивность для разных размеров экранов
+@media (max-width: 480px) {
+  .form_div_1 {
+    max-width: 100%;
+    gap: 8px;
+  }
+  
+  .input_1 {
+    max-width: 280px; // Больше на мобильных
+    height: 44px;
+    font-size: 18px; // Увеличили шрифт для мобильных
+    
+    &::placeholder {
+      font-size: 16px;
+    }
+  }
+  
+  .button.popup {
+    &__button_7,
+    &__button_10,
+    &__button_11 {
+      width: 44px;
+      height: 44px;
+    }
+  }
+  
+  .counter {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .form_div_1 {
+    gap: 6px;
+  }
+  
+  .input_1 {
+    max-width: 220px;
+    height: 42px;
+    font-size: 16px;
+    
+    &::placeholder {
+      font-size: 14px;
+    }
+  }
+  
+  .button.popup {
+    &__button_7,
+    &__button_10,
+    &__button_11 {
+      width: 42px;
+      height: 42px;
+    }
+  }
+}
+
+// Для очень больших экранов ограничиваем максимальный размер
+@media (min-width: 768px) {
+  .input_1 {
+    max-width: 280px; // Максимальный размер для больших экранов
+  }
+  
+  .form_div_1 {
+    max-width: 380px;
   }
 }

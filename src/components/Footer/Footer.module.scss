@@ -1,0 +1,51 @@
+.footer {
+  width: 100%;
+  background-color: #87ceeb; // Более насыщенный цвет, гармонирующий с aqua
+  border-top: 2px solid red; // Такая же граница как у основного блока
+  padding: 12px 20px;
+  margin: 0;
+  box-sizing: border-box;
+  
+  // Убираем скругления снизу, так как они есть у основного контейнера
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.footerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  
+  @media (max-width: 480px) {
+    padding: 0 5px;
+  }
+}
+
+.copyright {
+  color: #2c5282; // Темно-синий для хорошей читаемости
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: #1a365d;
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+  }
+}
+
+.version {
+  color: #2c5282;
+  font-size: 12px;
+  font-weight: 600;
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+  }
+}

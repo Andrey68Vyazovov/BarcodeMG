@@ -2,63 +2,110 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
   margin: 0;
-  padding: 0;
+  padding: 0 15px;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  
+  @media (max-width: 480px) {
+    bottom: 20px;
+    padding: 0 10px;
+  }
 }
 
 .mailForm {
   display: flex;
-  width: 90%;
+  justify-content: space-between; // Распределяем по краям
+  align-items: flex-end; // Выравниваем по низу
+  width: 100%;
+  gap: 100px;
+}
 
-  &_block {
-    display: flex;
-    flex-direction: column;
-  }
+.mailForm_block {
+  display: flex;
+  flex-direction: column;
+  flex: 1; // Занимаем все доступное пространство
+  min-width: 0; // Позволяем сжиматься
 }
 
 .select {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
 
   &_1 {
-    width: 90%;
-    border-radius: 3px;
+    width: 100%;
+    height: 40px; // Увеличили высоту для консистентности
+    padding: 0 12px;
+    border-radius: 6px;
+    border: 2px solid #ccc; // Увеличили границу
+    font-size: 16px; // Увеличили шрифт
+    box-sizing: border-box;
 
     &:focus {
-      border: 1.5px solid black;
+      border: 1.5px solid #007bff;
+      outline: none;
     }
   }
 }
 
 .popup {
   &__close {
-    position: absolute;
-    bottom: 0;
-    right: 30px;
-    margin: 0;
-    border: 2px solid black;
+    border: 2px solid #555; // Такая же граница
     border-radius: 40%;
     font-weight: 600;
-    width: 55px;
-    height: 55px;
-    background: #dedddf url('./images/send.svg') no-repeat center / cover;
-    background-size: 80%;
+    width: 50px;
+    height: 50px;
+    background: #dedddf url('./images/send.svg') no-repeat center / cover; // Тот же цвет
+    background-size: 65%;
     font-size: 11px;
-    box-shadow: 5px 5px 6px 0 #777386;
+    box-shadow: 3px 3px 5px 0 #777386;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 4px 4px 6px 0 #777386;
+      background-color: #d0ced1; // Тот же hover-эффект
+    }
 
     &:disabled {
       background: #fdfbff url('./images/send.svg') no-repeat center / cover;
-      background-size: 80%;
+      background-size: 65%;
       box-shadow: none;
       opacity: 0.4;
+      cursor: not-allowed;
+    }
+    
+    @media (max-width: 480px) {
+      width: 48px;
+      height: 48px;
     }
   }
 }
-
 .errorEmail {
   border: 1.5px solid red;
   background-color: #fac1bf;
   box-shadow: inset 2px 2px 5px white;
+}
+
+// Адаптивность для очень маленьких экранов
+@media (max-width: 360px) {
+  .mailForm {
+    gap: 100px;
+  }
+  
+  .select {
+    font-size: 12px;
+    
+    &_1 {
+      font-size: 12px;
+      height: 28px;
+    }
+  }
 }
