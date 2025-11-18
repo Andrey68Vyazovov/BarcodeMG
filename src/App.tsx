@@ -1,9 +1,10 @@
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import { ControlButtons } from "./components/ControlButtons"
 import { EmailForm } from "./components/EmailForm"
 import { Title } from "./components/Title"
 import { BarcodeScanner } from "./components/BarcodeScanner"
 import { StoreForm } from "./components/StoreForm"
+import { CameraScanner } from "./components/CameraScanner"
 import styles from './styles/styles.module.scss'
 import { Footer } from "./components/Footer"
 import { PopupConfirm } from "./components/PopupConfirm"
@@ -41,6 +42,9 @@ export function App() {
     clearFormData,
     clearBarcodeInputs
   } = useForms();
+
+  // Добавляем состояние для камеры
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   // Обработчик для формы 1
   const handleBarcodeInput1 = useCallback((value: string) => {
@@ -114,9 +118,23 @@ export function App() {
     }
   }, [email, getBarcodesCount, barcodes, currentForm, storeNumber, clearBarcodes, setEmail, setStoreNumber]);
 
+  // Обработчики для камеры
   const handleOpenCamera = useCallback(() => {
-    console.log('Открываем камеру');
+    setIsCameraOpen(true);
   }, []);
+
+  const handleCloseCamera = useCallback(() => {
+    setIsCameraOpen(false);
+  }, []);
+
+  const handleBarcodeScanned = useCallback((barcode: string) => {
+    // Добавляем штрих-код от камеры
+    const now = new Date();
+    const timestamp = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+    const barcodeData = `${barcode.split(' ')[0]}$${timestamp}`;
+    
+    addBarcode(barcodeData, true);
+  }, [addBarcode]);
 
   const isSendDisabled = !canSendEmail(email, getBarcodesCount());
 
@@ -168,6 +186,14 @@ export function App() {
         onConfirm={executeConfirm}
         onClose={hideConfirm}
       />
+
+      {/* Добавляем компонент камеры */}
+      {isCameraOpen && (
+        <CameraScanner 
+          onBarcodeScanned={handleBarcodeScanned}
+          onClose={handleCloseCamera}
+        />
+      )}
     </div>
   )
 }
