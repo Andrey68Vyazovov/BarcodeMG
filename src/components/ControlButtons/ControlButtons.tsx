@@ -46,7 +46,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
         disabled={isReloadDisabled} // Блокируем на время анимации
       >
         <img 
-          src="./images/refresh.svg" 
+          src="images/refresh.svg" 
           className={`${styles.svg_img} ${isReloadRotating ? styles.svg_img_rotate : ''}`} 
           alt="Reload" 
         />
@@ -59,7 +59,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
         disabled={isToggleDisabled} // Блокируем на время анимации
       >
         <img 
-          src="./images/sliders.svg" 
+          src="images/sliders.svg" 
           className={`${styles.svg_toggle} ${isToggleRotating ? styles.svg_toggle_rotate : ''}`} 
           alt="Toggle Form" 
         />
