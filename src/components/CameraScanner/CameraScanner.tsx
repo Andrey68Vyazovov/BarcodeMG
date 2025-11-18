@@ -43,7 +43,6 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     audioRef.current?.play().catch(() => {});
   };
 
-  // Инициализация воркеров
   useEffect(() => {
     for (let i = 0; i < MAX_WORKERS; i++) {
       const worker = new Worker(new URL('../../workers/barcodeWorker.ts', import.meta.url), {
@@ -51,11 +50,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       });
       workersRef.current.push(worker);
     }
-
-    return () => {
-      workersRef.current.forEach(w => w.terminate());
-      workersRef.current = [];
-    };
+    return () => workersRef.current.forEach(w => w.terminate());
   }, []);
 
   const captureAndDispatch = useCallback(() => {
@@ -83,24 +78,23 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       if (!worker) return;
 
       const handler = (e: MessageEvent) => {
+        // Игнорируем всё, что не от текущего jobId
+        if (e.data.jobId !== jobId) return;
 
+        // Отладочные логи
         if (e.data.type === 'debug') {
           console.log('Worker log:', e.data.text);
           return;
         }
-        
-        if (e.data.jobId !== jobId || resolved) {
-          worker.removeEventListener('message', handler);
-          return;
-        }
 
-        if (e.data.success) {
+        if (e.data.success && !resolved) {
           resolved = true;
           activeJobRef.current = null;
-          worker.removeEventListener('message', handler);
+
+          // Сразу снимаем handler у всех воркеров — больше никаких зомби!
+          workersRef.current.forEach(w => w.removeEventListener('message', handler));
 
           const formatName = e.data.format.toString().replace('FORMAT_', '').replace('_', '-');
-
           setScanResult({ format: formatName, text: e.data.text });
           playBeep();
           onBarcodeScanned(e.data.text);
@@ -114,7 +108,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       };
 
       worker.addEventListener('message', handler);
-      console.log('Отправляем кадр в воркеры, jobId:', jobId);
+
       worker.postMessage({
         buffer: imageData.data.buffer,
         width: canvas.width,
@@ -125,28 +119,22 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     });
   }, [isBlocked, onBarcodeScanned]);
 
-  // Правильный запуск камеры и сканирования
   useEffect(() => {
-    let stream: MediaStream | null = null;
-
     const startCamera = async () => {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({
+        const stream = await navigator.mediaDevices.getUserMedia({
           video: {
             facingMode: 'environment',
             width: { ideal: TARGET_VIDEO_WIDTH },
             height: { ideal: TARGET_VIDEO_HEIGHT },
           },
         });
-
         streamRef.current = stream;
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.setAttribute('playsinline', 'true');
           await videoRef.current.play();
-
-          // Запускаем интервал
           intervalRef.current = window.setInterval(captureAndDispatch, SCAN_INTERVAL_MS);
         }
       } catch (err: any) {
@@ -156,14 +144,9 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
 
     startCamera();
 
-    // Очистка
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
       streamRef.current?.getTracks().forEach(t => t.stop());
-      streamRef.current = null;
     };
   }, [captureAndDispatch]);
 
@@ -175,6 +158,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   };
 
   return (
+    // твой JSX без изменений
     <div className={styles.cameraOverlay}>
       <div className={styles.cameraContainer}>
         <div className={styles.cameraHeader}>
