@@ -9,10 +9,11 @@ export const SCANNER_CONFIG = {
   // Какие штрих-коды искать (все, что реально используется в магазинах/складах)
   POSSIBLE_FORMATS: [
     BarcodeFormat.EAN_13,
+    BarcodeFormat.CODE_128,
+    BarcodeFormat.RSS_EXPANDED, //транзитные
     BarcodeFormat.EAN_8,
     BarcodeFormat.UPC_A,
     BarcodeFormat.UPC_E,
-    BarcodeFormat.CODE_128,
     BarcodeFormat.CODE_39,
     BarcodeFormat.CODE_93,
     BarcodeFormat.ITF,
@@ -27,12 +28,14 @@ export const SCANNER_CONFIG = {
     TRY_HARDER: true,                    // стараться сильнее
     CHARACTER_SET: 'UTF-8',              // важно для русских текстов
     PURE_BARCODE: false,                 // если сканируешь только "чистые" коды
+    ALLOWED_LENGTHS: [],           // пустой массив = разрешить ВСЕ длины (критично!)
+    ASSUME_GS1: true,              // DataBar Expanded и многие Code 128 — это GS1!
   },
 
   // Область сканирования (ROI) — только центр экрана
   ROI: {
     enabled: true,
-    marginPercent: 15, // от краёв отрезаем по 15% → сканируем центральные 70%
+    marginPercent: 10, // от краёв отрезаем по 15% → сканируем центральные 70%
   },
 
   // Настройки камеры
