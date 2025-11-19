@@ -1,6 +1,6 @@
 // src/components/CameraScanner/CameraScanner.tsx
 import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { scanImageData, Symbol } from '@undecaf/zbar-wasm';
+import { scanImageData } from '@undecaf/zbar-wasm';
 import styles from './CameraScanner.module.scss';
 import beepSound from '../../assets/sounds/beep.wav';
 import { SCANNER_CONFIG } from '../../constants';
@@ -34,28 +34,33 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
 
   const processScan = useCallback(async (ctx: CanvasRenderingContext2D) => {
     if (isBlocked) return;
-
+  
     try {
       const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-      const symbols: Symbol[] = await scanImageData(imageData);
-
+  
+      // ВОТ ЭТО — ГЛАВНОЕ ДЛЯ ДВУСТРОЧНОГО DATABAR EXPANDED STACKED
+      const symbols = await scanImageData(imageData);
+  
       if (symbols.length > 0) {
-        const symbol = symbols[0];  // Первый (самый уверенный)
-        const code = symbol.decode();
-        const format = symbol.typeName.toUpperCase();  // ZBar возвращает 'DATABAR_EXPANDED' и т.д.
-
+        // Берём первый (самый уверенный) символ
+        const symbol = symbols[0];
+        const code = symbol.decode();                    // ← Полная строка с AI: (01)...(21)...
+        const format = symbol.typeName.toUpperCase();    // ← DATABAR_EXPANDED, CODE128 и т.д.
+  
+        console.log('УСПЕХ:', { format, code }); // ← Для дебага в консоли
+  
         setScanResult({ format, text: code });
         setIsBlocked(true);
         playBeep();
         onBarcodeScanned(code);
-
+  
         setTimeout(() => {
           setScanResult(null);
           setIsBlocked(false);
         }, SCANNER_CONFIG.SUCCESS_BLOCK_MS);
       }
     } catch (err) {
-      // Нет кода — нормально
+      // Ошибки игнорируем — это нормально (нет кода, плохое освещение и т.д.)
     }
   }, [isBlocked, onBarcodeScanned]);
 

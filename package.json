@@ -11,6 +11,7 @@
     "@undecaf/zbar-wasm": "^0.11.0",
     "@zxing/browser": "^0.1.5",
     "@zxing/library": "^0.21.3",
+    "gs1-barcode-parser-mod": "^1.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
